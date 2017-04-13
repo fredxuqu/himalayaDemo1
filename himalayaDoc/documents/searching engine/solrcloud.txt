@@ -1,0 +1,329 @@
+1. Deployment steps in local
+	jdk 1.8
+	solr-6.3.0
+	zookeeper-3.4.6
+	
+	zkserver1:192.168.1.111
+	zkserver2:192.168.1.112
+	zkserver3:192.168.1.113
+	
+	solr1:192.168.1.111
+	solr2:192.168.1.112
+	solr3:192.168.1.113
+	
+	a. deploy zookeeper to /usr/local/zookeeper
+	b. rename zoo_sample.cfg to zoo.cfg
+		cp /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg
+	c. modify zoo.cfg, add below items
+		dataDir=/usr/local/zookeeper/data
+		dataLogDir=/usr/local/zookeeper/logs
+		server.1=192.168.1.111:2888:3888
+		server.2=192.168.1.112:2888:3888
+		server.3=192.168.1.113:2888:3888	
+		
+	d. create myid under /usr/local/zookeeper/data, the content of myid is the sequence of the server
+	eg server.1=192.168.1.111:2888:3888, so the content of myid in server 192.168.1.111 is 1.
+	
+	e. open zookeeper ports
+		/sbin/iptables -I INPUT -p tcp --dport 2181 -j ACCEPT
+		/sbin/iptables -I INPUT -p tcp --dport 2888 -j ACCEPT
+		/sbin/iptables -I INPUT -p tcp --dport 3888 -j ACCEPT
+	
+	f. open tomcat port
+		/sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+	
+	g. save 
+		/etc/rc.d/init.d/iptables save
+		/etc/rc.d/init.d/iptables restart
+		
+2. Deploy solrcloud in pseudo-distributed mode
+	1. install three zk server under e:\zookeeper, server name is zk1, zk2, zk3
+		change the zoo.cfg as below
+		dataDir=e:/zookeeper/zk1/data
+		dataLogDir=e:/zookeeper/zk1/logs
+		server.1=127.0.0.1:2881:3881
+		server.2=127.0.0.1:2882:3882
+		server.3=127.0.0.1:2883:3883
+		
+	   start zkserver	
+	
+	2.  install solr cloud in standalone mode
+		create E:\solr\solr_home
+		solr start -cloud -p 8983 -s "E:\solr\solr-6.3.0.1\server\solr\tags" -z "127.0.0.1:2181"
+			-cloud 以cloud方式启动
+			-p 指定端口
+			-s 指定根目录
+			-z 指定zookeeper（用ip:端口。集群:ip:端口,ip:端口... ： 
+			列如"192.168.112.128:2181,192.168.112.128:2182,192.168.112.129:2181",
+			如果本服务器中参与zookeeper集群，可以直接用"127.0.0.1:端口"）
+
+		启动另外一台solr服务器，用同一个zookeeper集群
+		solr start -cloud -p 8983 -s "E:\solr\solr-6.3.0.1\server\solr\tags" -z "127.0.0.1:2181"
+	
+		如果是伪分布式模式则使用   solr start -cloud -p 8984 -s "E:\solr\solr-6.3.0.2\server\solr\tags" -z "127.0.0.1:2181"
+						 solr start -cloud -p 8985 -s "E:\solr\solr-6.3.0.3\server\solr\tags" -z "127.0.0.1:2181"
+	
+	3. 	创建core，upload config file
+		solr create_collection -c tags -shards 3 -replicationFactor 2 -d E:/solr/solr_home/tags/conf -p 8983
+		-c 核心名称
+		-shards 分片数量
+		-replicationFactor 副本数量 （一般指有几台solr集群）	
+	
+		OR create collection by Http Request
+		http://localhost:8983/solr/admin/collections?action=CREATE&name=tags&numShards=3&replicationFactor=2&maxShardsPerNode=5&collection.configName=tags
+		
+		OR Create collection on admin console
+	
+	4.	上传solr配置文件到zookeeper
+		cd E:\solr\solr-6.3.0.1\server\scripts\cloud-scripts
+		zkcli -cmd upconfig -zkhost 127.0.0.1:2181 -confdir E:/solr/solr_home/tags/conf -confname tags
+		-cmd upconfig:上传文件
+		-zkhost:zookeeper地址（集群用，分隔）
+		-confdir:配置地文件目录
+		-confname:名称
+		
+	5.	delete collection
+		by admin console
+		
+		by http request
+		http://localhost:8983/solr/admin/collections?action=DELETE&name=tags
+		
+	6.  update single config and upload to zookeeper
+		eg update managed-schema
+		zkcli -zkhost 127.0.0.1:2181 -cmd putfile /configs/tags/managed-schema E:/solr/solr_home/tags/conf/managed-schema
+		zkcli -zkhost 127.0.0.1:2181 -cmd putfile /configs/tagsdih/db-data-config.xml E:/solr/solr_home/tagsdih/conf/db-data-config.xml
+		-cmd putfile:修改配置
+		/configs/tags/managed-schema（schema.xml:solr6以下使用）:为zookeeper中节点位置
+	
+	7.	reload collection
+		http://127.0.0.1:8983/solr/admin/collections?action=RELOAD&name=tags
+	
+	8.	config ik analyser for solr (never succ)
+			download related ikanalyser config
+			copy Ikik-analyzer-solr-6.3.0.jar to E:\solr\solr-6.3.0.1\dist
+			
+			copy IKAnalyzer.cfg.xml、mydict.dic、stopword.dic to 
+			E:\solr\solr-6.3.0.1\server\solr-webapp\webapp\WEB-INF\classes
+			
+			
+		add below config to managed-schema
+			<fieldType name="text_ik" class="solr.TextField">  
+				<analyzer type="index" useSmart="false" class="org.wltea.analyzer.lucene.IKAnalyzer"/>  
+				<analyzer type="query" useSmart="true" class="org.wltea.analyzer.lucene.IKAnalyzer"/>  
+			</fieldType>
+			
+			<field name="text_ik"  type="text_ik" indexed="true"  stored="true"  multiValued="true" />
+		
+	9.	config data import handler
+		standalone mode
+		copy E:\solr\solr-6.3.0.1\example\example-DIH\solr\db to E:\solr\solr-6.3.0.1\server\solr\tags
+		copy oracle driver jar to E:\solr\solr-6.3.0.1\server\lib
+		update E:\solr\solr-6.3.0.1\server\solr\tags\db-data-config.xml
+		
+		restart solr
+
+
+3. Deploy solr in cloud mode
+	1. install three zk server under e:\zookeeper, server name is zk1, zk2, zk3
+		change the zoo.cfg as below
+		dataDir=/usr/local/zookeeper/data
+		dataLogDir=/usr/local/zookeeper/logs
+		server.1=192.168.1.111:2888:3888
+		server.2=192.168.1.112:2888:3888
+		server.3=192.168.1.113:2888:3888	
+		
+	   start zkserver	
+	
+	2.  install solr cloud in standalone mode
+		create a directory /usr/local/solr_home
+		solr start -cloud -p 8983 -s "/usr/local/solr-6.3.0/server/solr/tags" -z "127.0.0.1:2181"
+			-cloud 以cloud方式启动
+			-p 指定端口
+			-s 指定根目录
+			-z 指定zookeeper（用ip:端口。集群:ip:端口,ip:端口... ： 
+			列如"192.168.112.128:2181,192.168.112.128:2182,192.168.112.129:2181",
+			如果本服务器中参与zookeeper集群，可以直接用"127.0.0.1:端口"）
+
+		启动另外一台solr服务器，用同一个zookeeper集群
+		solr start -cloud -p 8983 -s "/usr/local/solr-6.3.0/server/solr/tags" -z "127.0.0.1:2181"
+	
+	3. 	创建core，upload config file
+		solr create_collection -c tags -shards 3 -replicationFactor 2 -d /usr/local/solr_home/tags/conf -p 8983
+		-c 核心名称
+		-shards 分片数量
+		-replicationFactor 副本数量 （一般指有几台solr集群）	
+	
+		OR create collection by Http Request
+		http://localhost:8983/solr/admin/collections?action=CREATE&name=tags&numShards=3&replicationFactor=2&maxShardsPerNode=5&collection.configName=tags
+		
+		OR Create collection on admin console
+	
+	4.	上传solr配置文件到zookeeper
+		cd /usr/local/solr-6.3.0/server/scripts/cloud-scripts
+		zkcli -cmd upconfig -zkhost 127.0.0.1:2181 -confdir /usr/local/solr_home/tags/conf -confname tags
+		-cmd upconfig:上传文件
+		-zkhost:zookeeper地址（集群用，分隔）
+		-confdir:配置地文件目录
+		-confname:名称
+		
+	5.	delete collection
+		by admin console
+		
+		by http request
+		http://localhost:8983/solr/admin/collections?action=DELETE&name=tags
+		
+	6.  update single config and upload to zookeeper
+		eg update managed-schema
+		zkcli -zkhost 127.0.0.1:2181 -cmd putfile /configs/tags/managed-schema /usr/local/solr_home/tags/conf/managed-schema
+		-cmd putfile:修改配置
+		/configs/tags/managed-schema（schema.xml:solr6以下使用）:为zookeeper中节点位置
+	
+	7.	reload collection
+		http://127.0.0.1:8983/solr/admin/collections?action=RELOAD&name=tags
+	
+		
+	8.	config ik analyser for solr (never succ)
+			download related ikanalyser config
+			copy Ikik-analyzer-solr-6.3.0.jar to E:\solr\solr-6.3.0.1\dist
+			
+			copy IKAnalyzer.cfg.xml、mydict.dic、stopword.dic to 
+			/usr/local/solr-6.3.0/server/solr-webapp/webapp/WEB-INF/classes
+			
+			
+		add below config to managed-schema
+			<fieldType name="text_ik" class="solr.TextField">  
+				<analyzer type="index" useSmart="false" class="org.wltea.analyzer.lucene.IKAnalyzer"/>  
+				<analyzer type="query" useSmart="true" class="org.wltea.analyzer.lucene.IKAnalyzer"/>  
+			</fieldType>
+			
+			<field name="text_ik"  type="text_ik" indexed="true"  stored="true"  multiValued="true" />
+		
+	9.	config data import handler
+		standalone mode
+		copy /usr/local/solr-6.3.0/example/example-DIH/solr/db to /usr/local/solr_home/tags
+		copy oracle driver jar to /usr/local/solr-6.3.0/server/lib
+		update /usr/local/solr_home/tags/conf/db-data-config.xml
+		
+		restart solr
+
+commands
+	mkdir E:\solr\solr-6.3.0.1\server\solr
+	solr start -cloud -p 8983 -s "E:\solr\solr-6.3.0.1\server\solr" -z "127.0.0.1:2181"
+	solr start -cloud -p 8984 -s "E:\solr\solr-6.3.0.2\server\solr" -z "127.0.0.1:2181"
+	solr start -cloud -p 8985 -s "E:\solr\solr-6.3.0.3\server\solr" -z "127.0.0.1:2181"
+	
+	solr create_collection -c tagsdih -shards 3 -replicationFactor 2 -d E:/solr/solr_home/tagsdih/conf -p 8983
+	
+	if step3 executed, then skip step 4.
+	cd E:\solr\solr-6.3.0.1\server\scripts\cloud-scripts
+	zkcli -cmd upconfig -zkhost 127.0.0.1:2181 -confdir E:/solr/solr_home/tagsdih/conf -confname tagsdih
+	
+	http://localhost:8983/solr/admin/collections?action=DELETE&name=tags
+	
+	update single config and upload to zookeeper
+	eg update managed-schema
+	zkcli -zkhost 127.0.0.1:2181 -cmd putfile /configs/tags/managed-schema E:/solr/solr_home/tags/conf/managed-schema
+	-cmd putfile:修改配置
+	/configs/tags/managed-schema（schema.xml:solr6以下使用）:为zookeeper中节点位置
+
+	reload collection
+	http://127.0.0.1:8983/solr/admin/collections?action=RELOAD&name=tags
+	
+	
+
+	
+	
+1. download solr-6.3.0.tgz 
+2. tar -xvf  solr-5.5.4.tar solr-5.5.4/bin/install_solr_service.sh --strip-components=2
+   tar -zxvf solr-5.5.4.tgz solr-5.5.4/bin/install_solr_service.sh --strip-compenents=2	
+   ./install_solr_service.sh solr-5.5.4.tar -i /usr/local/solr-5.5.4 -d /usr/local/solr-5.5.4 -u solr -s solr -p 8983	
+   
+   tar -zxvf solr-5.5.4.tgz 
+   
+   update solr-5.5.4/bin/solr.in.sh
+   zkHost="192.168.1.111:2181,192.168.1.112:2181,192.168.1.113:2181"
+
+   /usr/local/solr-5.5.4/bin/solr create -c tags -d /usr/local/solr-5.5.4/server/solr/configsets/tags_configs -n tags_configs -shards 3 -replicationFactor 2
+
+Solr6.3.0 Cloud 云方式的安装与配置
+1.	准备好节点服务器
+	首先配置了3台虚拟机(VirtualBox)分别为
+	server01(192.168.1.111)，
+	server02(192.168.1.112)，
+	server03(192.168.1.113)。使用Ubuntu14.04-Server版本
+
+	update /etc/hosts
+	127.0.1.1   server01 192.168.1.111  cloud1
+	127.0.1.1   server02 192.168.1.112  cloud2​
+	127.0.1.1   server03 192.168.1.113  cloud3
+
+2. Config zookeeper
+	unzip zookeeper-3.4.8.tgz and solr-5.5.4.tgz to below path：
+	/usr/local/zookeeper-3.4.8
+	/usr/local/solr-5.5.4
+	
+	tar -zxvf zookeeper-3.4.8.tgz ​/usr/local/
+	tar -zxvf solr-5.5.4.tgz ​/usr/local/
+
+	config zookeeper-3.4.8
+	create dataDir for each server 
+	mkdir /usr/local/zookeeper-3.4.8/data
+	then create a file as name myid under data directory
+	echo "1">myid
+
+	enter /usr/local/zookeeper-3.4.8/conf
+	create zoo.cfg (rename zoo_example.cfg)，and change the content as below：
+		tickTime=2000
+		initLimit=10
+		syncLimit=5
+		dataDir=/usr/local/zookeeper-3.4.8/data
+		clientPort=2181
+		server.1=server01:2888:3888
+		server.2=server02:2888:3888
+		server.3=server03:2888:3888
+
+	start zookeeper server
+	/usr/local/zookeeper-3.4.8/bin/zkServer.sh start
+
+	zk will select one server as leader, others are follower.
+
+2.	Config Solr
+	unzip solr-5.5.4.tgz to /usr/local
+	
+	choose server01 and create solr_home under /usr/local
+		/usr/local/solr_home/configsets/....
+						   -/tags/conf/solrconfig.xml,schema.xml
+						   -/solr.xml
+						   -/zoo.cfg
+
+	需要说明的是：各个自定义模块的solrconfig.xml内容中的以下内容用系统默认的配置。
+	${solr.data.dir:}
+
+	schema.xml is the same with standlone mode。
+
+3. upload solr config to zookeeper by below command
+	cd /usr/local/solr-5.5.4/server/scripts/cloud-scripts and execute
+	./zkcli.sh -cmd upconfig -confdir /usr/local/solr_home/tags/conf -confname tags -z server01:2181,server02:2181,server03:2181/solr
+
+	or save above command to a file "upsolrconf.sh"
+
+4. execute conf and link collection
+	cd /usr/local/solr-5.5.4/server/scripts/cloud-scripts and execute
+	./zkcli.sh -cmd linkconfig -collection tags -confname tags -z server01:2181,server02:2181,server03:2181/solr
+
+5. start solr
+	start every solr server
+	cd /usr/local/solr-5.5.4/bin
+	./solr start -cloud -p 8481 -s "/usr/local/solr-5.5.4/server/solr" -z server01:2181,server02:2181,server03:2181/solr
+
+	http://192.168.1.111:8481/solr/
+
+6. create core and shard
+	/usr/local/solr-5.5.4/bin/solr create -c tags -d /usr/local/solr_home/tags -n tags -shards 2 -replicationFactor 2 -z server01:2181,server02:2181,server03:2181
+	/usr/local/solr-5.5.4/bin/solr create -c tags -n tags -shards 3 -replicationFactor 2
+
+Note：numShards + replicationFactor <= maxShardsPerNode
+	
+	
+	
+	

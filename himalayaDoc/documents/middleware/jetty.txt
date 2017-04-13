@@ -1,0 +1,25 @@
+
+1. How to config JNDI
+
+<New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">  
+   <Arg></Arg>  
+   <Arg>jdbc/DSTest</Arg>  
+   <Arg>  
+     <New class="com.jolbox.bonecp.BoneCPDataSource">  
+       <Set name="driverClass">com.mysql.jdbc.Driver</Set>  
+       <Set name="jdbcUrl">jdbc:mysql://localhost:3306/foo</Set>  
+       <Set name="username">dbuser</Set>  
+       <Set name="password">  
+          <Call class="org.eclipse.jetty.util.security.Password" name="deobfuscate">  
+                <Arg>OBF:1ri71v1r1v2n1ri71shq1ri71shs1ri71v1r1v2n1ri7</Arg>  
+          </Call>  
+       </Set>  
+       <Set name="minConnectionsPerPartition">5</Set>  
+       <Set name="maxConnectionsPerPartition">50</Set>  
+       <Set name="acquireIncrement">5</Set>  
+       <Set name="idleConnectionTestPeriod">30</Set>  
+    </New>  
+  </Arg>  
+</New>  
+
+2. How to encrypt password

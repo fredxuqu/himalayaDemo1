@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ForumMyBatisDao">
+
+	<select id="getById" resultType="Forum" parameterType="int">
+		SELECT
+			forum_id forumId,
+			forum_name forumName,
+			forum_desc forumDesc
+		FROM tb_forum
+		WHERE forum_id = #{forumId}
+	</select>
+	
+	<select id="listAll" resultType="Forum">
+		SELECT
+			forum_id forumId,
+			forum_name forumName,
+			forum_desc forumDesc
+		FROM tb_forum
+	</select>
+	
+	<select id="count" resultType="int">
+		SELECT COUNT(forum_id) 
+		FROM tb_forum f
+	</select>
+	
+	<select id="findForumByName" resultType="Forum" parameterType="string">
+		SELECT
+			forum_id forumId,
+			forum_name forumName,
+			forum_desc forumDesc
+		FROM tb_forum f
+		WHERE f.forum_name LIKE #{forumName}
+	</select>
+	
+	<insert id="insert" parameterType="Forum">
+		INSERT INTO
+			tb_forum(forum_id,forum_name,forum_desc)
+		VALUES(#{forumId},#{forumName}, #{forumDesc})
+	</insert>
+
+	<update id="update" parameterType="Forum">
+		UPDATE tb_forum f
+		   SET forum_name=#{forumName},forum_desc=#{forumDesc}
+		 WHERE f.forum_id = #{forumId}
+	</update>
+</mapper>

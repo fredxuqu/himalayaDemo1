@@ -1,0 +1,46 @@
+1. install
+
+2. 
+	git add readme.txt
+	git commit -m "commit comments"
+	
+	git status
+	git diff <filename>
+	
+	git log
+	git log --pretty=oneline
+	git reflog
+	
+	git reset
+	git reset --hard HEAD
+	
+	git reset --hard commitid
+	
+	git checkout -- filename
+	
+	git reset HEAD file // revert all changes in local stage
+	
+	git rm
+	
+	git clone git@github.com:michaelliao/gitskills.git
+	
+	
+	git checkout -b dev
+		git branch dev
+		git checkout dev
+		
+	git branch //check all branch status
+	
+	
+	git merge dev  // merge dev to current branch
+	
+	查看分支：git branch
+	创建分支：git branch <name>
+	切换分支：git checkout <name>
+	创建+切换分支：git checkout -b <name>
+	合并某分支到当前分支：git merge <name>
+	删除分支：git branch -d <name>
+	
+	
+	
+	

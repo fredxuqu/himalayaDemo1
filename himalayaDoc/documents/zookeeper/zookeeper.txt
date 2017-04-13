@@ -1,0 +1,139 @@
+
+1. zookeeper下载地址
+	http://mirrors.cnnic.cn/apache/zookeeper/zookeeper-3.4.8/zookeeper-3.4.8.tar
+	http://mirrors.cnnic.cn/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+	
+1. Single Server
+	tar -xvf zookeeper-3.4.8.tar /usr/local
+	
+	create a data folder
+	mkdir /usr/local/zookeeper-3.4.8/data
+	mkdir /usr/local/zookeeper-3.4.8/log
+	
+	modify sample_zoo.cfg to zoo.cfg
+	
+	update config file as below
+		tickTime=2000
+		dataDir=/usr/local/zookeeper-3.4.8/data
+		dataLogDir=/usr/local/zookeeper-3.4.8/log
+		clientPort=2181
+		
+	Cluster Server
+	tar -xvf zookeeper-3.4.8.tar /usr/local
+	
+	create a data folder for each server
+	mkdir /usr/local/zookeeper-3.4.8/data
+	
+	echo "1" > myid
+	
+	create a log folder for each server
+	mkdir /usr/local/zookeeper-3.4.8/log
+	
+	modify sample_zoo.cfg to zoo.cfg
+	
+	update config file as below
+		tickTime=2000
+		dataDir=/usr/local/zookeeper-3.4.8/data
+		dataLogDir=/usr/local/zookeeper-3.4.8/log
+		clientPort=2181
+		server.1=192.168.1.111:2888:3888
+		server.2=192.168.1.112:2888:3888
+		server.3=192.168.1.113:2888:3888
+		
+	./zkServer.sh 
+	
+	./zkServer.sh status
+	
+	ZooInspector
+	http://download.csdn.net/detail/andamajing/9565580
+	
+	eclipse plugin
+	http://www.massedynamic.org/eclipse/updates
+	
+	Connect zk server by client
+	zkCli.sh -server 127.0.0.1:2181
+	
+	create znode
+	create /mykey1 myvalue1
+	
+	show all nodes
+	ls
+	
+	get node
+	get mykey1
+		
+	set node
+	set mykey1 updatevalue1
+	
+	delete node
+	set mykey1
+	
+	connect host:port
+	get path [watch]
+	ls path [watch]
+	set path data [version]
+	rmr path
+	delquota [-n|-b] path
+	quit
+	printwatches on|off
+	create [-s] [-e] path data acl
+	stat path [watch]
+	close
+	ls2 path [watch]
+	history
+	listquota path
+	setAcl path acl
+	getAcl path
+	sync path
+	redo cmdno
+	addauth scheme auth
+	delete path [version]
+	setquota -n|-b val path
+
+-------------------------------------------
+-- ZooKeeper Standalone Mode             --
+-------------------------------------------
+	1. download zookeeper
+	2. unzip
+	3. cd /usr/local/zookeeper
+	4. mkdir zk1
+	5. unzip zookeeper to /usr/local/zookeeper/zk1
+	6. mkdir /usr/local/zookeeper/zk1/data
+	7. echo "1" > /usr/local/zookeeper/zk1/data/myid
+	8. rename zoo_sample.cfg to zoo.cfg
+	9. update zoo.cfg as following
+		tickTime=2000
+		initLimit=10
+		syncLimit=5
+		dataDir=/usr/local/zookeeper/zk1/data
+		clientPort=2181
+		maxClientCnxns=60
+		server.1=127.0.0.1:2881:3881
+		server.2=127.0.0.1:2882:3882
+		server.3=127.0.0.1:2883:3883
+		
+	repeat step 4 - 9 to create the second and the third zookeeper server
+	Note: change the clientPort and dataDir configurations for each server.
+
+-------------------------------------------
+-- ZooKeeper Standalone Mode             --
+-------------------------------------------
+	1. download zookeeper
+	2. unzip
+	3. cd /usr/local/zookeeper
+	4. mkdir zk1
+	5. unzip zookeeper to /usr/local/zookeeper/zk1
+	6. mkdir /usr/local/zookeeper/data
+	7. echo "1" > /usr/local/zookeeper/data/myid
+	8. rename zoo_sample.cfg to zoo.cfg
+	9. update zoo.cfg as following
+		tickTime=2000
+		initLimit=10
+		syncLimit=5
+		dataDir=/usr/local/zookeeper/data
+		clientPort=2181
+		maxClientCnxns=60
+		server.1=192.168.1.101:2881:3881
+		server.2=192.168.1.102:2881:3881
+		server.3=192.168.1.103:2881:3881
+

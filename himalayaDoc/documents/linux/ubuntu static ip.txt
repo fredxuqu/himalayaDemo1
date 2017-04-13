@@ -1,0 +1,18 @@
+ubuntu14.04 Set static IP address
+
+sudo vim /etc/network/interfaces
+then add below configurations
+auto eth0
+iface eth0 inet static
+address 192.168.0.111
+gateway 192.168.0.1
+netmask 255.255.255.0
+network 192.168.0.0
+broadcast 192.168.0.255
+
+#add nameserver, put a public net's address here.
+nameserver 202.96.128.86
+
+3. 重启网卡：
+sudo ifdown nth0 -a
+sudo ifup nth0 -a

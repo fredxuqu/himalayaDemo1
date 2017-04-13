@@ -1,0 +1,12 @@
+1. install brew
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
+	
+	install software by brew
+	sudo brew install wget/nginx/....
+	
+	uninstall software by brew
+	sudo brew uninstall wget
+	
+	check installed software
+	sudo brew search /apache*/
+	

@@ -1,0 +1,30 @@
+
+sudo anna
+
+# change mode
+chmod -R 755 /usr/local/solr
+
+# change owner
+chown -R anna /usr/local/solr
+
+#change group
+chgrp -R anna /usr/local/solr
+
+# tar
+tar -zcvf solr.tar.zg /usr/local/solr
+tar -zxvf solr.tar.gz /usr/local/
+
+# check process
+ps -ef|grep java
+
+# scp copy between server
+scp anna@192.168.1.110:/usr/local/readme.txt /opt/local/
+
+# check memory
+free
+
+find
+
+# check port
+ps -aux | grep tomcat
+netstat –apn | grep 8080

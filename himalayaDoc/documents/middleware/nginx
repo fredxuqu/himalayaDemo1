@@ -1,0 +1,25 @@
+1. How to install Nginx in MacBook
+	
+	brew search nginx
+	brew install nginx
+	start nginx 
+	sudo nginx
+	localhost:8080 welcome page will be displayed.
+
+	make a soft link
+	ln -s  /usr/local/sbin/nginx /usr/bin/nginx
+
+	common commands
+	nginx -V  -- check version and location of configuration
+	nginx -v  -- check version
+	
+	nginx -c filename  -- appoint configuration file
+	nginx -h 
+
+	nginx -s reload|reopen|stop|quit
+	
+	sudo nginx -- open nginx
+	
+	nginx -t
+	
+	

@@ -1,0 +1,113 @@
+package com.himalaya.interceptor;
+
+import java.io.InputStream;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.cxf.helpers.IOUtils;
+import org.apache.cxf.interceptor.LoggingMessage;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.AbstractPhaseInterceptor;
+import org.apache.cxf.phase.Phase;
+import org.apache.log4j.Logger;
+
+public class MessageInInterceptor extends AbstractPhaseInterceptor<Message> {
+
+	private static final Logger logger = Logger.getLogger(MessageInInterceptor.class);
+
+	public MessageInInterceptor() {
+		super(Phase.RECEIVE);
+	    addBefore(MessageOutInterceptor.class.getName());
+	}
+
+	public void handleMessage(Message message) {
+
+		System.out.println("MessageInInteceptor.handleMessage() called ");
+		try {
+						
+			String id = LoggingMessage.nextId();
+	        message.getExchange().put(LoggingMessage.ID_KEY, id);
+	        
+	        String currentTime = (new Date()).toString();
+	        message.getExchange().put("AcceptTime", currentTime);
+	        
+	        if ("GET".equals(message.get(message.HTTP_REQUEST_METHOD))) {
+	        	System.out.println("**** " + (String)message.get(Message.QUERY_STRING));
+	        	message.getExchange().put(Message.QUERY_STRING, (String)message.get(Message.QUERY_STRING));
+		        message.getExchange().put(Message.HTTP_REQUEST_METHOD, (String)message.get(Message.HTTP_REQUEST_METHOD));
+		    } else if ("POST".equals(message.get(message.HTTP_REQUEST_METHOD))) {
+			    InputStream is = message.getContent(InputStream.class);
+			    String queryString = IOUtils.toString(is);
+			    System.out.println("**** " + queryString);
+			    //message.getExchange().put(Message.QUERY_STRING, queryString);
+		        message.getExchange().put(Message.HTTP_REQUEST_METHOD, (String)message.get(Message.HTTP_REQUEST_METHOD));
+		    }
+	        
+	        /**
+			List<String> ipList = new ArrayList<String>();
+			HttpServletRequest request = (HttpServletRequest) message.get(AbstractHTTPDestination.HTTP_REQUEST);
+	        String ipAddress="";
+	        boolean flag = false;
+	        if (null != request) {
+	            ipAddress = getUserIpAddr(request); // 取客户端IP地址
+	            System.out.println("请求客户端的IP地址:" + ipAddress);
+	            message.getExchange().put("IP", ipAddress);
+	            for (String s : ipList) {
+	                if (s.equals(ipAddress)) {
+	                    flag = true;
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        String queryStr = (String)message.getExchange().get(Message.QUERY_STRING);
+	        Object decodedStr = null; 
+
+	        if(queryStr!=null){
+	        	ByteArrayInputStream bis = new ByteArrayInputStream(queryStr.getBytes("UTF-8"));  
+	            ObjectInputStream ois = new ObjectInputStream(bis);
+	        	decodedStr = ois.readObject(); 
+	        }
+	        
+	        System.out.println("请求方法类型：" + (String)message.get(Message.HTTP_REQUEST_METHOD));
+	        System.out.println("请求客户端的MSG ： " + (String)decodedStr);
+			System.out.println("请求客户端的序列 ： " + (String)message.getExchange().get(LoggingMessage.ID_KEY));
+	        System.out.println("请求客户端的IP地址： " + (String)message.getExchange().get("IP"));
+	        System.out.println("请求客户端的参数 ： " + (String)message.getExchange().get(Message.QUERY_STRING));
+	        System.out.println("请求客户端的参数URL ： " + (String)message.get(Message.REQUEST_URL));
+	        System.out.println("请求客户端的时间 ： " + (String)message.getExchange().get("AcceptTime"));
+	        //super.handleMessage(message);
+	      */
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("MessageInInterceptor handle request error!");
+		}
+	}
+	
+	/**
+     * 获取IP地址的方法
+     * @param request
+     * @return
+     */
+    private String getUserIpAddr(HttpServletRequest request) {
+           String ip = request.getHeader("x-forwarded-for");
+           if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+               ip = request.getHeader("Proxy-Client-IP");
+           }
+           if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+               ip = request.getHeader("WL-Proxy-Client-IP");
+           }
+           if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+               ip = request.getRemoteAddr();
+           }
+           return ip;
+    }
+	
+	@Override
+	public void handleFault(Message message) {
+		System.out.println("Input Message Fault Handler.....");	  
+        Exception exeption=message.getContent(Exception.class);  
+        System.out.println("Exception" + exeption.getMessage()); 
+    }
+}

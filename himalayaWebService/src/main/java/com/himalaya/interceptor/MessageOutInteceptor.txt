@@ -1,0 +1,85 @@
+package com.himalaya.interceptor;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.cxf.helpers.IOUtils;
+import org.apache.cxf.interceptor.AbstractLoggingInterceptor;
+import org.apache.cxf.interceptor.Fault;
+import org.apache.cxf.interceptor.LoggingMessage;
+import org.apache.cxf.io.CachedOutputStream;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.phase.AbstractPhaseInterceptor;
+import org.apache.cxf.phase.Phase;
+import org.apache.log4j.Logger;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.xpath.DefaultXPath;
+
+import com.himalaya.service.mqclient.MQProducerMananger;
+
+public class MessageOutInterceptor extends AbstractPhaseInterceptor<Message>{
+
+	private static final Logger logger = Logger.getLogger(MessageInInterceptor.class);
+	
+	private final String DEFAULTXPATH = "//return";
+	
+	private final String SINGLETONMAP_KEY = "ns1";
+	
+	private final String SINGLETONMAP_VALUE = "http://service.himalaya.com/";
+
+	public MessageOutInterceptor() {
+        super(Phase.PRE_STREAM);
+    }
+	
+	public void handleMessage(Message message) throws Fault {
+		/**
+		try {
+			System.out.println("MessageOutInteceptor.handleMessage() called ");
+			
+	        String soapBodyXml = SoapXMLHandler.getSoapBodyXml(message);
+	        message.getExchange().put("SoapBodyXML", soapBodyXml);
+	        message.getExchange().put("QueryResult", SoapXMLHandler.getSoapResult(soapBodyXml));
+	        
+	        System.out.println("请求客户端的方法类型 ： " + (String)message.getExchange().get(Message.HTTP_REQUEST_METHOD));
+	        System.out.println("请求客户端的序列 ： " + (String)message.getExchange().get(LoggingMessage.ID_KEY));
+	        System.out.println("请求客户端的IP地址 ： " + (String)message.getExchange().get("IP"));
+	        System.out.println("请求客户端的参数 ： " + (String)message.getExchange().get(Message.QUERY_STRING));
+	        System.out.println("请求客户端的时间 ： " + (String)message.getExchange().get("AcceptTime"));
+	        System.out.println("服务端返回的XML ：" + (String)message.getExchange().get("SoapBodyXML"));
+	        System.out.println("服务端返回的结果 ：" + (String)message.getExchange().get("QueryResult"));
+	        
+	        String jsonMsg = parseMessageToJson(message);
+	        System.out.println(jsonMsg);
+//	        MQProducerMananger.getInstance().sendMessageToMQ(jsonMsg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		*/
+    }
+	
+	private String parseMessageToJson(Message message){
+		StringBuilder buffer = new StringBuilder("{");
+		buffer.append("msgId:'" + (String)message.getExchange().get(LoggingMessage.ID_KEY) + "',");
+		buffer.append("ipAddress:'" + (String)message.getExchange().get("IP") + "',");
+		buffer.append("queryString:'" + (String)message.getExchange().get(Message.QUERY_STRING) + "',");
+		buffer.append("acceptTime:'" + (String)message.getExchange().get("AcceptTime") + "',");
+		buffer.append("soapBodyXML:'" + (String)message.getExchange().get("SoapBodyXML") + "',");
+		buffer.append("queryResult:'" + (String)message.getExchange().get("QueryResult") + "'");
+		buffer.append("}");
+		return buffer.toString();
+	}
+	
+	@Override
+	public void handleFault(Message message) {
+		System.out.println("Output Message Fault Handler.....");		  
+        Exception exeption=message.getContent(Exception.class);  
+        System.out.println("Exception" + exeption.getMessage()); 
+    }
+}

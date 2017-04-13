@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+cron:
+  tags: 0/5 * * * * ? 
+
+---
+spring:
+  profiles: test
+cron:
+  tags: 0/10 * * * * ? 

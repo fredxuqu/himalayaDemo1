@@ -1,0 +1,86 @@
+
+1. Install
+	http://www.apache.org/dyn/closer.cgi/lucene/solr/6.2.1
+	download from https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.2.1/
+	
+	unzip 
+	https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.2.1/solr-6.2.1.tgz
+
+2. Config dataSource for DIH
+<dataConfig>
+    <dataSource class="com.alibaba.druid.pool.DruidDataSource" 
+				driver="oracle.jdbc.driver.OracleDriver" 
+				url="jdbc:oracle:thin:@localhost:1521:orcl" 
+				user="scott" 
+				password="sa" 
+				name="druidDS"/>
+				
+	<dataSource name="tagssearch" jndiName="java:comp/env/jdbc/pysearchDB" type="JdbcDataSource"/>
+	
+    <document>
+        <entity dataSource="druidDS" name="tagEntity" pk="ID" 
+				query="select id,tag_name,type,status,rank,modify_time from tb_social_statistics "
+				deltaImportQuery="select id,tag_name,type,status,rank,modify_time from tb_social_statistics where id = ${dih.delta.ID}"
+				deltaQuery="select id from tb_social_statistics where modify_time > to_date('${dataimporter.last_index_time}','yyyy-mm-dd HH24:SS:MI')" >
+                
+            <field column="ID" name="id" />
+			<field column="TAG_NAME" name="tagName" />
+			<field column="TYPE" name="type" />
+			<field column="STATUS" name="status" />
+			<field column="RANK" name="rank" />
+			<field column="MODIFY_TIME" name="modifyTime" />            
+        </entity>
+    </document>
+</dataConfig>	
+
+	NOTE: column name should be uppercase. 
+
+3. config JNDI
+	a. 	copy jetty-jndi-9.3.8.v20160314.jar and jetty-plus-9.3.8.v20160314.jar to solr_home/server/lib
+	b.	change druid source code and override setPassword method, then copy druid.jar and oracle driver to solr_home/server/lib/ext
+	c.	add below config to solr_home/server/contexts/solr-jetty-context.xml
+		<New id="pysearch" class="org.eclipse.jetty.plus.jndi.Resource">
+			<Arg></Arg>
+			<Arg>jdbc/pysearch</Arg>
+			<Arg>
+				<New class="com.alibaba.druid.pool.DruidDataSource">
+					<Set name="driverClassName">oracle.jdbc.driver.OracleDriver</Set>  
+					<Set name="url">jdbc:oracle:thin:@localhost:1521:orcl</Set>  
+					<Set name="username">scott</Set>
+					<Set name="password">{MD5}9fdd42c2a7390d3</Set>
+				</New>
+			</Arg>  
+		</New>
+		
+	d.	add below config to solr-6.3.0\server\solr-webapp\webapp\WEB-INF\web.xml
+		<resource-ref>
+			<description>Text JNDI Reference</description>
+			<res-ref-name>textjndi</res-ref-name>
+			<res-type>java.lang.String</res-type>
+			<res-auth>Container</res-auth>
+		</resource-ref>
+		
+4. solr6.3.0 + tomcat8 
+	blog:	http://blog.csdn.net/yzl_8877/article/details/53199355
+	a.  download and unzip solr
+	b.	copy solr-6.3.0\server\solr-webapp\webapp to tomcat_home\webapps, then change name to solr
+	c.	create solr_home under solr-6.3.0\server\solr-webapp\webapp to tomcat_home\webapps\solr
+	d.	copy all files under solr-6.3.0\server\solr to solr_home
+	e.	copy all jars under solr-6.3.0\server\lib\ext to webapps\solr\WEB-INF\lib
+	f.	copy solr-6.3.0\server\resources\log4j.properties to webapps\solr\WEB-INF\classes
+	g.	modify webapps\solr\WEB-INF\web.xml and open <evn-entry>, change as below
+		<env-entry>
+	       <env-entry-name>solr/home</env-entry-name>
+	       <env-entry-value>E:\solr\apache-tomcat-8\webapps\solr\solr_home</env-entry-value>
+	       <env-entry-type>java.lang.String</env-entry-type>
+	    </env-entry>
+	h. 	modify tomcat\conf\server.xml
+		<Context path="solr" docBase="E:\solr\apache-tomcat-8\webapps\solr" sessionCookieName="ksessionid"/>
+
+	i.	remove <auth-constraint /> from webapps\solr\WEB-INF\web.xml
+	j.	http://127.0.0.1:8080/solr/index.html
+
+	set SOLR TIME ZONE
+	set SOLR_TIMEZONE=UTC/GMT+08:00
+	
+	-Dfile.encoding=UTF-8

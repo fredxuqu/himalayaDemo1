@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- bean id="dataSourceDruid" class="com.alibaba.druid.pool.DruidDataSource"-->
+	<bean id="oracleDataSourceDruid" class="com.himalaya.datasource.DecryptDruidDataSource">
+		<property name="driverClassName" value="${oracle.jdbc.driverClassName}" />
+		<property name="url" value="${oracle.jdbc.url}" />
+		<property name="username" value="${oracle.jdbc.username}" />
+		<property name="password" value="${oracle.jdbc.password}" />
+
+		<!-- config.decrypt=true 
+		<property name="filters" value="config" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+		-->
+		
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${druid.jdbc.initialSize}" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="${druid.jdbc.maxActive}" />
+		<!-- 连接池最大空闲 这个参数已经被弃用 <property name="maxIdle" value="${druid.jdbc.maxIdle}"></property> -->
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${druid.jdbc.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${druid.jdbc.maxWait}"></property>
+		<property name="validationQuery" value="${druid.jdbc.validationQuery}" />
+		<property name="testWhileIdle" value="${druid.jdbc.testWhileIdle}" />
+		<property name="testOnBorrow" value="${druid.jdbc.testOnBorrow}" />
+		<property name="testOnReturn" value="${druid.jdbc.testOnReturn}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${druid.jdbc.timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${druid.jdbc.minEvictableIdleTimeMillis}" />
+
+		<!-- 关闭长时间不使用的连接 -->
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="${druid.jdbc.removeAbandoned}" />
+		<!-- 1200秒，也就是20分钟 -->
+		<property name="removeAbandonedTimeout" value="${druid.jdbc.removeAbandonedTimeout}" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="${druid.jdbc.logAbandoned}" />
+	</bean>
+	
+	<bean id="mysqlDataSourceDruid" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}" />
+		<property name="url" value="${mysql.jdbc.url}" />
+		<property name="username" value="${mysql.jdbc.username}" />
+		<property name="password" value="${mysql.jdbc.password}" />
+
+		<!-- config.decrypt=true 
+		<property name="filters" value="config" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+		-->
+		
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${druid.jdbc.initialSize}" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="${druid.jdbc.maxActive}" />
+		<!-- 连接池最大空闲 这个参数已经被弃用 <property name="maxIdle" value="${druid.jdbc.maxIdle}"></property> -->
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${druid.jdbc.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${druid.jdbc.maxWait}"></property>
+		<property name="validationQuery" value="${druid.jdbc.validationQuery}" />
+		<property name="testWhileIdle" value="${druid.jdbc.testWhileIdle}" />
+		<property name="testOnBorrow" value="${druid.jdbc.testOnBorrow}" />
+		<property name="testOnReturn" value="${druid.jdbc.testOnReturn}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${druid.jdbc.timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${druid.jdbc.minEvictableIdleTimeMillis}" />
+
+		<!-- 关闭长时间不使用的连接 -->
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="${druid.jdbc.removeAbandoned}" />
+		<!-- 1200秒，也就是20分钟 -->
+		<property name="removeAbandonedTimeout" value="${druid.jdbc.removeAbandonedTimeout}" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="${druid.jdbc.logAbandoned}" />
+	</bean>
+
+	<bean id="dataSourceC3p0" name="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<!-- 指定连接数据库的驱动 -->
+		<property name="driverClass" value="${oracle.jdbc.driverClassName}" />
+		<!-- 指定连接数据库的URL -->
+		<property name="jdbcUrl" value="${oracle.jdbc.url}" />
+		<!-- 指定连接数据库的用户名 -->
+		<property name="user" value="${oracle.jdbc.username}" />
+		<!-- 指定连接数据库的密码 -->
+		<property name="password" value="${oracle.jdbc.password}" />
+		<!-- 指定连接池中保留的最大连接数. Default:15 -->
+		<property name="maxPoolSize" value="${c3p0.jdbc.maxPoolSize}" />
+		<!-- 指定连接池中保留的最小连接数 -->
+		<property name="minPoolSize" value="${c3p0.jdbc.minPoolSize}" />
+		<!-- 指定连接池的初始化连接数 取值应在minPoolSize 与 maxPoolSize 之间.Default:3 -->
+		<property name="initialPoolSize" value="${c3p0.jdbc.initialPoolSize}" />
+		<!-- 最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。 Default:0 -->
+		<property name="maxIdleTime" value="${c3p0.jdbc.maxIdleTime}" />
+		<!-- 当连接池中的连接耗尽的时候c3p0一次同时获取的连接数. Default:3 -->
+		<property name="acquireIncrement" value="${c3p0.jdbc.acquireIncrement}" />
+		<!-- JDBC的标准,用以控制数据源内加载的PreparedStatements数量。 但由于预缓存的statements属于单个connection而不是整个连接池所以设置这个参数需要考虑到多方面的因数.如果maxStatements与maxStatementsPerConnection均为0,则缓存被关闭。Default:0 -->
+		<property name="maxStatements" value="${c3p0.jdbc.maxStatements}" />
+		<!-- 每60秒检查所有连接池中的空闲连接.Default:0 -->
+		<property name="idleConnectionTestPeriod" value="${c3p0.jdbc.idleConnectionTestPeriod}" />
+	</bean>
+</beans>

@@ -1,0 +1,58 @@
+securecrt 7.0.1
+Name: Sherrill Ray  
+Company:  
+Serial Number:03-40-084141  
+License Key: ABWGUE ZPPZ6X XHTN2S 1N7PER AB39ZJ PX3312 WS6BZF GHN2ET  
+Issue Date: 10-26-2002
+
+fred sa
+root Cheese#21
+
+
+Virtual Machine Setup
+1. Download Ubuntu 14.04.4 - ubuntu-14.04.4-desktop-amd64.iso
+	
+2. Install Virtual Box
+
+3. Install virtual machine base on ubuntu 14.04.4
+	a. create a virtual machine named as "server01"
+	b. set ROM
+	c. set disk capacity
+	d. choose ubuntu-14.04.4-desktop-amd64.iso
+	e. start virtual machine
+	
+4. Install JDK
+	download jdk7 and jdk8 from oracle
+	tar -xvf /usr/local
+	
+	set system variable
+	A. vi /etc/local
+	#set oracle jdk environment
+	export JAVA_HOME=/usr/local/jdk1.7.0_80
+	#export JAVA_HOME=/usr/local/jdk1.8.0_121
+	export JRE_HOME=$JAVA_HOME/jre
+	export CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JRE_HOME/lib
+	export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+	
+	OR B. vi /etc/fred/.bashrc
+	#set oracle jdk environment
+	export JAVA_HOME=/usr/local/jdk1.7.0_80
+	#export JAVA_HOME=/usr/local/jdk1.8.0_121
+	export JRE_HOME=$JAVA_HOME/jre
+	export CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JRE_HOME/lib
+	export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+
+5.	Common Command
+tar -xvf xxx.tar
+tar -zxvf xxx.tar.gz
+sudo scp fred@192.168.1.111:/home/fred/Public/sharedFolder/solr-5.5.4.tar /usr/local
+
+sudo chmod -R 755 solr-5.5.4
+sudo chgrp -R fred solr-5.5.4
+sudo chown -R fred solr-5.5.4
+
+#check linux issued information
+lsb_release -a 
+	
+	
+	
