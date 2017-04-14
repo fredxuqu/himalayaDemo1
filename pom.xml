@@ -72,6 +72,7 @@
 	            <artifactId>commons-lang</artifactId>
 	            <version>2.2</version>
 	        </dependency>
+	        
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
@@ -152,8 +153,6 @@
 			    <version>${ognl.version}</version>
 			</dependency>
 
-
-
 			<dependency>
 				<groupId>org.json</groupId>
 				<artifactId>json</artifactId>
@@ -228,6 +227,13 @@
 				<artifactId>solr-solrj</artifactId>
 				<version>${solr.version}</version>
 			</dependency>
+			<!-- data analysis -->
+			<dependency>
+				<groupId>org.solr</groupId>
+				<artifactId>ik-analyzer-solr</artifactId>
+				<version>6.3.0</version>
+			</dependency>
+			
 			<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -262,7 +268,6 @@
 				<artifactId>zookeeper</artifactId>
 				<version>3.4.8</version>
 			</dependency>
-
 			<!-- https://mvnrepository.com/artifact/com.101tec/zkclient -->
 			<dependency>
 				<groupId>com.101tec</groupId>

@@ -8,9 +8,7 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.himalaya</groupId>
 	<artifactId>himalayaWebServiceClient</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>himalaya WebService Client</name>
 
@@ -18,7 +16,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -42,7 +39,6 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>${cxfapi.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>woodstox-core-asl</artifactId>
@@ -58,7 +54,6 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxfapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -70,13 +65,11 @@
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jaxen/jaxen -->
 		<dependency>
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
-			<version>1.1.6</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.axis/axis -->
