@@ -1,0 +1,122 @@
+步骤如下：
+ 第一：把spring、quartz 相应的jar包，添加到项目中。
+ 第二：web.xml中配置spring
+ 第三：在spring配置文件中配置quartz任务调度
+    3.1：配置JobDetail
+    3.2：配置触发器Trigger
+    3.3：配置任务调度Scheduler
+
+ 注意：在spring配置quartz任务调度中的JobDetail时，有两种方式配置。
+      1：编写的job类，是个普通的类，不继承任何spring或quartz中的类。
+
+<!-- 第一种集成方式：MethodInvokingJobDetailFactoryBean，并且job类，直接是pojo类，与普通类没有区别 -->
+ <!-- 定义具体的任务类 -->
+ <bean id="job" class="com.test.MyJob" />
+
+ <!-- 定义jobDetail -->
+ <bean id="jobDetail"
+  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+ <!--  目标类 -->
+  <property name="targetObject">
+   <ref bean="job" />
+  </property>
+  <!-- 目标类中要执行的方法 ,这个参数是必须的-->
+   <property name="targetMethod">
+    <value>execute</value>
+  </property>
+ </bean>
+
+2：编写的job类，需要继承spring中的QuartzJobBean，其实QuartzJobBean类实现了Job接口，与上篇博客相同。
+
+<!-- 第二种集成方式：MethodInvokingJobDetailFactoryBean，并且任务类，是需要继承QuartzJobBean-->
+      <!-- 定义jobDetail -->
+    <bean id="jobDetail2" class="org.springframework.scheduling.quartz.JobDetailBean"> 
+      <!--    目标类 -->
+    <property name="jobClass" value="com.test.MyJob2"></property> 
+      <!--  在这个例子中，jobDataAsMap没有用，此目标类中接受的参数 ,若参数为service，则可以在此进行参数配置，类似struts2 -->
+      <!--<property name="jobDataAsMap"> 
+          <map> 
+              <entry key="service"><value>simple is the beat</value></entry> 
+          </map> 
+    </property>-->
+    </bean>
+
+具体的demo如下：
+ 两种不同的配置方式在spring中 配置文件中都已经注释掉。
+ 两种自己编写的任务类：
+ 第一种：不继承spring或quartz的类
+
+package com.test;
+import java.util.Date;
+/**
+ * 需要执行的任务
+ * @author lhy
+ *
+ */
+public class MyJob{
+
+ //把要执行的操作，
+ public void execute() {
+  execute2();
+ }
+ public void execute2(){
+  System.err.println("测试Quartz"+new Date());
+
+ }
+
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+ xmlns:tx="http://www.springframework.org/schema/tx"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+<!-- 第一种集成方式：MethodInvokingJobDetailFactoryBean，并且job类，直接是pojo类，与普通类没有区别 -->
+ <!-- 定义具体的任务类 -->
+ <bean id="job" class="com.test.MyJob" />
+
+ <!-- 定义jobDetail -->
+ <bean id="jobDetail"
+  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+ <!--  目标类 -->
+  <property name="targetObject">
+   <ref bean="job" />
+  </property>
+  <!-- 目标类中要执行的方法 ,这个参数是必须的-->
+   <property name="targetMethod">
+    <value>execute</value>
+  </property>
+ </bean>
+
+ <!-- 定义simpleTrigger触发器 -->
+<!--  <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  <property name="jobDetail" ref="jobDetail"></property>
+  <property name="repeatCount">
+   <value>8</value>
+  </property>
+  <property name="repeatInterval">
+   <value>1000</value>
+  </property>
+        <property name="startDelay">
+            <value>4</value>
+        </property>
+ </bean> -->
+ 
+ <!-- 另一种触发器是CornTrigger -->
+  <bean id="cornTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="jobDetail"/>
+    <!-- 下午3点51分 -->
+    <property name="cronExpression" value="0 24 16 * * ? *"/>
+ </bean> 
+ 
+ <!-- 定义核心调度器 -->
+ <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+  <property name="triggers">
+    <ref bean="cornTrigger"/>
+  </property>
+ </bean>
+</beans>

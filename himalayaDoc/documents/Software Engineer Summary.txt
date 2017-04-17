@@ -1,0 +1,22 @@
+============================================
+01 Core Java
+============================================ 
+
+
+
+============================================
+02 Spring
+============================================ 
+Spring Security身份认证					http://www.linuxidc.com/Linux/2015-01/112244.htm
+Spring Security之HTTP基本认证和HTTP摘要认证 	http://www.linuxidc.com/Linux/2014-02/97403.htm
+Spring Security之OpenID认证				http://www.linuxidc.com/Linux/2014-02/97405.htm
+Spring Security之数据库认证   				http://www.linuxidc.com/Linux/2014-02/97407.htm
+Spring Security之HTTP表单验证 				http://www.linuxidc.com/Linux/2014-02/97402.htm
+Spring配置Quartz任务调度框架教程				http://www.linuxidc.com/Linux/2014-11/108907.htm
+Spring中如何配置Hibernate事务				http://www.linuxidc.com/Linux/2013-12/93681.htm
+Struts2整合Spring方法及原理					http://www.linuxidc.com/Linux/2013-12/93692.htm
+基于 Spring 设计并实现 RESTful Web Services 	http://www.linuxidc.com/Linux/2013-10/91974.htm
+Spring-3.2.4 + Quartz-2.2.0集成实例 		http://www.linuxidc.com/Linux/2013-10/91524.htm
+使用 Spring 进行单元测试 						http://www.linuxidc.com/Linux/2013-09/89913.htm
+运用Spring注解实现Netty服务器端UDP应用程序 		http://www.linuxidc.com/Linux/2013-09/89780.htm
+Spring 3.x 企业应用开发实战 PDF完整高清扫描版	 	http://www.linuxidc.com/Linux/2013-10/91357.htm
