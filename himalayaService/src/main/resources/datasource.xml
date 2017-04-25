@@ -49,7 +49,6 @@
 		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
 	</bean>
 
-
 	<bean id="mysqlDataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
 		<!--数据库驱动类 -->

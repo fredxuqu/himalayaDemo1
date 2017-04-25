@@ -6,7 +6,5 @@
 	</settings>
 	<typeAliases>
 		<typeAlias alias="Forum" type="com.himalaya.model.ForumDO" />
-		<!-- <typeAlias alias="Topic" type="com.himalaya.domain.TopicDO" />
-		<typeAlias alias="Post" type="com.himalaya.domain.PostDO" /> -->
 	</typeAliases>
 </configuration>

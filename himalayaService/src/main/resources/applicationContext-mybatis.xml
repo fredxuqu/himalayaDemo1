@@ -29,14 +29,20 @@
           p:username="${mysql.jdbc.username}"
           p:password="${mysql.jdbc.password}"/     -->
 
-    <bean id="sqlSessionFactory" name="sqlSessionFactoryName"
+	<bean id="oracleSqlSessionFactory" name="sqlSessionFactoryName"
+          class="org.mybatis.spring.SqlSessionFactoryBean" 
+          p:dataSource-ref="oracleDataSource" 
+          p:configLocation="classpath:myBatisConfig.xml" 
+          p:mapperLocations="classpath:com/himalaya/model/mybatis/*.xml"/>
+	
+    <bean id="mysqlSqlSessionFactory" name="sqlSessionFactoryName"
           class="org.mybatis.spring.SqlSessionFactoryBean" 
           p:dataSource-ref="mysqlDataSource" 
           p:configLocation="classpath:myBatisConfig.xml" 
           p:mapperLocations="classpath:com/himalaya/model/mybatis/*.xml"/>
 
     <bean class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg ref="sqlSessionFactory"/>
+        <constructor-arg ref="oracleSqlSessionFactory"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
