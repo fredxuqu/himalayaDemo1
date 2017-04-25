@@ -84,3 +84,28 @@
 	set SOLR_TIMEZONE=UTC/GMT+08:00
 	
 	-Dfile.encoding=UTF-8
+	
+
+5. How to import csv file
+	1. add CSVHandler to solrconfig.xml
+	<requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy">
+		<lst name="defaults">
+	   		<str name="separator">;</str>
+	   		<str name="header">true</str>
+	   		<str name="skip">publish_date</str>
+	   		<str name="encapsulator">"</str>
+		</lst>
+  	</requestHandler>
+		
+	2. add config to schema-manage
+		<field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+   		<field name="newscontent" type="text_general" indexed="true" stored="true" />
+		
+	3. prepare csv file 
+		id,newscontent
+		1,"Hello World"
+		2,"solr 世界美好"
+		3,"软件开发,java技术"
+	
+	4. execute command to import 
+		http://localhost:8983/solr/news/update/csv?stream.file=E:/solr/solr-6.3.0/example/exampledocs/news.csv&stream.contentType=text/plain;charset=utf-8&fieldnames=id,newscontent&commit=true
