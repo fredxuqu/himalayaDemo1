@@ -109,10 +109,10 @@
 	
 	4. execute command to import
 		http://localhost:8983/solr/news/update?stream.file=E:/solr/solr-6.3.0/example/exampledocs/news.csv&stream.contentType=text/csv;charset=utf-8&fieldnames=id,newscontent&overwrite=false&commit=true
-
 		
 6. solr searching grammar
 	1. keep search order
 		localhost:8983/solr/news/select/q=newscontent="南华"~8&fl=id,newscontent&sort=score desc&fq=status:2&start=0&rows=10&defType=complexphrase&wt=json&indent=true
 		
 		http://localhost:8983/solr/news/select?q=newscontent:"上海"~8&fl=id,newscontent&sort=score desc&start=0&rows=10&defType=complexphrase&wt=json&indent=true
+
