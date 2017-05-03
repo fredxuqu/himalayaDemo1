@@ -18,13 +18,13 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.himalaya.model.SolrQueryParameter;
 import com.himalaya.service.IService;
 import com.himalaya.util.Constants;
 
-@Component("tagService")
+@Service
 public class ServiceImpl implements IService {
 
 	private final Logger logger = LoggerFactory.getLogger(ServiceImpl.class);

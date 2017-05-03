@@ -1,5 +1,11 @@
 package com.himalaya.datasource;
-
+/**
+* @author: xuqu
+* @E-mail: fredxuqu@163.com
+* @version 
+* 2017年5月3日 下午3:17:49
+* Description
+*/
 import com.alibaba.druid.pool.DruidDataSource;
 import com.himalaya.dbutils.DecryptUtils;
 

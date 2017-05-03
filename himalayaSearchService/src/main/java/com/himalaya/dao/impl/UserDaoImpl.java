@@ -7,29 +7,28 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.himalaya.dao.UserDao;
+import com.himalaya.dao.UserDAO;
 import com.himalaya.model.UserDO;
 
 
-@Repository("userDao")
-public class UserDaoImpl implements UserDao{
+@Repository
+public class UserDaoImpl implements UserDAO{
 
 	private final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
-	
+
 	private final String SQL_QUERY_ALL = "SELECT * FROM TB_USERS ";
-	private final String SQL_COUNT = "SELECT COUNT(*) FROM TB_USERS ";
-	
+		
 	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	protected JdbcTemplate jdbcTemplate;
 	
 	public List<UserDO> listAll() {
 		
 		logger.debug("SQL : " + SQL_QUERY_ALL);
-		List<UserDO> users = namedParameterJdbcTemplate.query(SQL_QUERY_ALL, new RowMapper<UserDO>() {
+		List<UserDO> users = jdbcTemplate.query(SQL_QUERY_ALL, new RowMapper<UserDO>() {
 			
 			@Override
 			public UserDO mapRow(ResultSet rs, int arg1) throws SQLException {

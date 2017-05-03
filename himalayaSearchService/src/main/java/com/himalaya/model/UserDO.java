@@ -9,6 +9,7 @@ public class UserDO {
 	private int type;
 	private Date registDate;
 	private Date lastLoginDate;
+	
 	public int getId() {
 		return id;
 	}
