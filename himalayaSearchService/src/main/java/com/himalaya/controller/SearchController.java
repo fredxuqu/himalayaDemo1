@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.himalaya.service.IService;
+import com.himalaya.solr.client.QueryClient;
 
 @Component("controller")
 @RequestMapping("/search")
@@ -18,7 +18,7 @@ public class SearchController {
 	private final Logger logger = LoggerFactory.getLogger(SearchController.class);
 
 	@Autowired
-	private IService tagService;
+	private QueryClient tagService;
 
 	@RequestMapping(value = "/tags", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public @ResponseBody String searchTags(@RequestParam("keyWords") String keyWords,

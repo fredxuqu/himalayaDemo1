@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.himalaya.BaseTestCase;
-import com.himalaya.service.impl.ServiceImpl;
+import com.himalaya.solr.client.impl.QueryServiceImpl;
 
 public class UserDaoImplTest extends BaseTestCase{
 	
-	private final Logger logger = LoggerFactory.getLogger(ServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(QueryServiceImpl.class);
 
 	@Value("oracle.jdbc.driverClassName")
 	private String driverName;

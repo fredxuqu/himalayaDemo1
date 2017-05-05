@@ -7,15 +7,7 @@ import org.junit.Test;
 public class SortDemoTest {
 	int[] elements = {12,23,2,1,100,1909,4,-1};
 	
-	@Before
-	public void setUp() throws Exception {
-		print();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		print();
-	}
+	
 	
 	@Test
 	public void testCollectionsSort(){
