@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>himalayaCoreJava</module>
+		<module>himalayaStudy</module>
 		<module>himalayaLogService</module>
 		<module>himalayaService</module>
 		<module>himalayaSearchService</module>
