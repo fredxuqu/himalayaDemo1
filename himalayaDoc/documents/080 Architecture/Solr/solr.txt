@@ -33,6 +33,90 @@
 	</dataConfig>	
 
 	NOTE: column name should be uppercase. 
+	
+3. schema.xml configuration.
+	type:
+	<fieldType name="string" class="solr.StrField" sortMissingLast="true" />
+	<fieldType name="int" class="solr.TrieIntField" precisionStep="0" positionIncrementGap="0"/>
+	<fieldType name="random" class="solr.RandomSortField" indexed="true" />
+	<fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+      <analyzer>
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+      </analyzer>
+    </fieldType>
+    <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <!-- in this example, we will only use synonyms at query time
+        <filter class="solr.SynonymFilterFactory" synonyms="index_synonyms.txt" ignoreCase="true" expand="false"/>
+        -->
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" />
+        <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+      </analyzer>
+    </fieldType>
+    
+    descriptions:
+	    name: identity
+	    class： 
+	    sortMissingLast
+	    sortMissingFirst
+	    anlyzer
+	    type
+	    tokenizer
+	    filter
+	    
+	b.	fields: 
+		field: fixed fields
+		dynamicField:
+		copyField 
+			multiValued=true
+			name
+			class
+			indexed
+			stored: if field is not indexed, it must be stored
+			omitNorms
+			termVectors
+			compressed
+			multiValued
+			positionIncrementGap
+	d.	uniqueKey
+	e.	defaultSearchField
+	f.	solrQueryParser: and/or
+			
+
+4. solrconfig.xml
+	solr performance factors
+		useCompoundFile
+		ramBufferSizeMB
+		maxBufferedDocs
+		mergeFactor
+		maxIndexingThreads: Max number of IndexWriter tasks.
+		lockType: single, native, JVM, simple
+		unlockOnStartup
+	
+	query
+		maxBooleanClauses
+		filterCache: filter cache
+		queryResultCache: cache searching result, a list of document ids;
+		documentCache: 
+		fieldValueCache: field cache, quick search by document id, will be created by default.
+		enableLazyFieldLoading
+		queryResultWindowSize
+		queryResultMaxDocsCached
+		listener
+		useColdSearcher
+		maxWarmingSearchers
+		
+		
+		
+	BooleanQuery
+	
 
 3. config JNDI
 	a. 	copy jetty-jndi-9.3.8.v20160314.jar and jetty-plus-9.3.8.v20160314.jar to solr_home/server/lib
@@ -60,6 +144,8 @@
 			<res-auth>Container</res-auth>
 		</resource-ref>
 
+4. Config smartcn
+	
 4. Config IK analysis
 	config ik analyser for solr (never succ)
 		download related ikanalyser config
@@ -135,11 +221,59 @@
 		http://localhost:8983/solr/news/update?stream.file=E:/solr/solr-6.3.0/example/exampledocs/news.csv&stream.contentType=text/csv;charset=utf-8&fieldnames=id,newscontent&overwrite=false&commit=true
 
 6. solr searching grammar
+	1. indexing
+		SolrInputDocument doc = new SolrInputDocument();
+		doc.setField("id","abc");
+		doc.setField("content","hi jack");
+		server.add(doc);
+		server.commit;
+		
+		server.deleteById(id);
+		server.deleteById(ids);
+		server.deleteByQuery("*:*");
+		
+		SolrQuery query = new SolrQuery();
+		query.set("q","*.*");
+		QueryResponse rsp =server.query(query)
+		SolrDocumentList list = rsp.getResults();
+		for (int i = 0; i < list.size(); i++) {
+			SolrDocument sd = list.get(i);
+			String id = (String) sd.getFieldValue("id");
+			System.out.println(id);
+		}
+		
+	2. optimize solr index
+		q:	查询字符串，必须的。
+		fq:	filter query。使用Filter Query可以充分利用Filter Query Cache，提高检索性能。作用：在q查询符合结果中同时是fq查询符合的，例如：q=mm&fq=date_time:[20081001 TO 20091031]，找关键字mm，并且date_time是20081001到20091031之间的。
+		fl:	field list。指定返回结果字段。以空格“ ”或逗号“,”分隔。
+		start:	用于分页定义结果起始记录数，默认为0。
+		rows 用于分页定义结果每页返回记录数，默认为10。
+		sort 排序，格式:sort=<field name>+<desc|asc>[,<field name>+<desc|asc>]… 。示例：（inStock desc, price asc）表示先 “inStock” 降序, 再 “price” 升序，默认是相关性降序。
+		df 默认的查询字段，一般默认指定。
+		q.op 覆盖schema.xml的defaultOperator（有空格时用"AND"还是用"OR"操作逻辑），一般默认指定。必须大写
+		wt writer type。指定查询输出结构格式，默认为“xml”。在solrconfig.xml中定义了查询输出格式：xml、json、python、ruby、php、phps、custom。
+		qt query type，指定查询使用的Query Handler，默认为“standard”。
+		explainOther 设置当debugQuery=true时，显示其他的查询说明。
+		defType
+		设置查询解析器名称。
+		timeAllowed
+		设置查询超时时间。
+		omitHeader
+		设置是否忽略查询结果返回头信息，默认为“false”。
+		indent
+		返回的结果是否缩进，默认关闭，用 indent=true|on 开启，一
+		般调试json,php,phps,ruby输出才有必要用这个参数。
+		version
+		查询语法的版本，建议不使用它，由服务器指定默认值。
+		debugQuery
+		设置返回结果是否显示Debug信息。
+		
+		
 	1. keep search order
 		localhost:8983/solr/news/select/q=newscontent="南华"~8&fl=id,newscontent&sort=score desc&fq=status:2&start=0&rows=10&defType=complexphrase&wt=json&indent=true
 		
 		http://localhost:8983/solr/news/select?q=newscontent:"上海"~8&fl=id,newscontent&sort=score desc&start=0&rows=10&defType=complexphrase&wt=json&indent=true
-
+	
 7. configure and use spatial search
 	
 	
