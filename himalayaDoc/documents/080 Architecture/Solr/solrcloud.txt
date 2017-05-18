@@ -50,12 +50,12 @@
 	2.  install solr cloud in standalone mode
 		create E:\solr\solr_home
 		solr start -cloud -p 8983 -s "E:\solr\solr-6.3.0.1\server\solr\tags" -z "127.0.0.1:2181"
-			-cloud 以cloud方式启动
-			-p 指定端口
-			-s 指定根目录
-			-z 指定zookeeper（用ip:端口。集群:ip:端口,ip:端口... ： 
-			列如"192.168.112.128:2181,192.168.112.128:2182,192.168.112.129:2181",
-			如果本服务器中参与zookeeper集群，可以直接用"127.0.0.1:端口"）
+			-cloud start solr as cloud mode
+			-p specified port
+			-s specified path
+			-z specified zookeeper（use ip:port or cluster ip:port,ip:port... ： 
+			eg: "192.168.112.128:2181,192.168.112.128:2182,192.168.112.129:2181",
+			if current server is a member of zookeeper cluster, can use "127.0.0.1:port" directly）
 
 		启动另外一台solr服务器，用同一个zookeeper集群
 		solr start -cloud -p 8983 -s "E:\solr\solr-6.3.0.1\server\solr\tags" -z "127.0.0.1:2181"
