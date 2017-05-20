@@ -9,16 +9,17 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
-		<module>himalayaCoreJava</module>
-		<module>himalayaSpringBoot</module>
-		<module>himalayaLogService</module>
-		<module>himalayaService</module>
-		<module>himalayaSearchService</module>
-		<module>himalayaJob</module>
-		<module>himalayaWeb</module>
-		<module>himalayaWebService</module>
-		<module>himalayaWebServiceClient</module>
-		<module>himalayaAssembly</module>
+		<module>himalaya-corejava</module>
+		<module>himalaya-springmvc</module>
+		<module>himalaya-job</module>
+		<module>himalaya-springboot</module>
+		<module>himalaya-rocketmq</module>
+		<module>himalaya-dubbo</module>
+		<module>himalaya-zookeeper</module>
+		<module>himalaya-search</module>
+		<module>himalaya-webservice</module>
+		<module>himalaya-webserviceclient</module>
+		<module>himalaya-assembly</module>
 	</modules>
 
 	<properties>

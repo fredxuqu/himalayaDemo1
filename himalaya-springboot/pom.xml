@@ -8,9 +8,9 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>himalayaStudy</artifactId>
+	<artifactId>himalayaSpringBoot</artifactId>
 	<packaging>jar</packaging>
-	<name>Himalaya Study Demo</name>
+	<name>Himalaya Spring Boot Demo</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>

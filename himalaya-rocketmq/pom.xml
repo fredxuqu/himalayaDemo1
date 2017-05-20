@@ -8,9 +8,9 @@
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>himalayaLogService</artifactId>
+	<artifactId>himalayaRocketMQ</artifactId>
 	<packaging>jar</packaging>
-	<name>himalayaDemo Maven Log Service</name>
+	<name>himalayaDemo Rocket MQ Demo</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<!-- junit for testing -->
