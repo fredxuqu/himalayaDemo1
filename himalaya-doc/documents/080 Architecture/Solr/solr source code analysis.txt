@@ -1,0 +1,172 @@
+<pre name="code" class="java">SearchHandler.handleRequestBody()：  
+solr搜索主流程  
+1.调用：RequestHandlerBase  
+    |--handleRequest(req, rsp);  
+2.源码分析：  
+|-prepare() |前期的请求参数准备工作,QueryComponent可以在schemal文件中设置，易扩展  
+    |-- SearchComponent c : components     
+               |--queryComponent.prepare()        
+  
+            |--FQ,FL,SHARDS,Q.SHARDS.ROWS,SHARDS.START  |设置查询的条件，包括分片的查询条件    
+            |--设置fieldFlags返回的field值  
+            |--设置defType值 |默认lucene,实际指向的是lucenePlugin，可在schema文件中扩展  
+            |--解析QueryParser ｜对queryString进行解析  
+                |--解析fq过滤值，生成filter过滤query集  
+            |--设定shards分片信息  
+        |--statComponent.prepare()     
+            |--debugComponent.prepare()  
+  
+  
+|--process()   |单组无shard情况处理  
+    |--String ids = params.get(ShardParams.IDS); |获取shardDoc的id集合，不为空往下执行  
+        |--通过ids获取文档id的集合，并为下一步获取DocList做准备  
+            |--int id = req.getSearcher().getFirstMatch(     
+                        |--new Term(idField.getName(), idField.getType().toInternal(idArr.get(i))));  
+            |-- luceneIds[docs++] = id;    
+            |-- res.docList = new DocSlice(0, docs, luceneIds, null, docs, 0);  
+  
+                |--if (rb.isNeedDocSet()) 存在DocSet需求  
+            |--queries.add(rb.getQuery()); |queryString的查询条件  
+            |--queries.addAll(filters);    |filter查询条件  
+            |--res.docSet = searcher.getDocSet(queries);  |通过queries条件进行DocSet查询  
+        |--rb.setResults(res);  |设置结果返回值  
+            |--rsp.add("response",rb.getResults().docList);  
+        |--return; |获取结果集后返回  
+   
+    |--SolrIndexSearcher.QueryCommand cmd = rb.getQueryCommand();  |获取查询封装的QueryCommand对象  
+    |--searcher.search(result,cmd);  
+        |--getDocListC(qr,cmd);   
+    |--rb.setResult( result );   |与上同  
+        |--rsp.add("response",rb.getResults().docList);  
+  
+    |--boolean fsv = req.getParams().getBool(ResponseBuilder.FIELD_SORT_VALUES,false);   |设定fsv，用于排序字段处理  
+        |--SortField[] sortFields  |获取排序的域  
+        |--Field field = new Field("dummy", "", Field.Store.YES, Field.Index.NO); //  仿冒域  
+        |--SolrIndexReader[] readers = reader.getLeafReaders();   |获取所有的IndexReader结点  
+        |--if (readers.length==1)  subReader = readers[0]; |直接处理  
+        |--for (SortField sortField: sortFields)  |循环处理各个排序域  
+            |--FieldComparator comparators[] = (readers==null) ? null : new FieldComparator[readers.length]; |声明域比较器  
+            |--DocIterator it = rb.getResults().docList.iterator(); |过滤docList集合  
+            |--while(it.hasNext())  
+                |--int doc = it.nextDoc();  
+                |--idx = SolrIndexReader.readerIndex(doc, offsets); |获取id所在的Indexreader  
+                |--comparator.copy(0, doc);   
+                |--Object val = comparator.value(0); ｜获取comparator的value值  
+                |-- vals.add(val);  ｜添加至vals当中  
+            |--sortVals.add(fieldname, vals);  |添加至排序值当中  
+        |--rsp.add("sort_values", sortVals); |设置响应对象Response的sort_values的排序值  
+  
+  
+|--process()   |多组shard处理  
+    |--初始化操作  
+        |-- HttpCommComponent comm = new HttpCommComponent();  
+        |-- rb.outgoing = new LinkedList<ShardRequest>();  
+        |-- rb.finished = new ArrayList<ShardRequest>();  
+    |--while (nextStage != Integer.MAX_VALUE) |循环执行，设置stage状态  
+        |-- for( SearchComponent c : components ) {  
+                    |--nextStage = Math.min(nextStage, c.distributedProcess(rb)); |distributedProcess(rb)根据rb的stage状态做处理  
+              
+        |-- while (rb.outgoing.size() > 0)  
+            |--while (rb.outgoing.size() > 0)  
+                |--ShardRequest sreq = rb.outgoing.remove(0); |取第一个请求值  
+                |--for (String shard : sreq.actualShards)    
+                    |--ModifiableSolrParams params = new ModifiableSolrParams(sreq.params); |设置参数  
+                    |--comm.submit(sreq, shard, params); |提交http请求,执行一个Task任务，获取Response响应  
+            |--while (rb.outgoing.size() == 0)    
+                |--ShardResponse srsp = comm.takeCompletedOrError();  |获取响应  
+                |--rb.finished.add(srsp.getShardRequest());   |完成此次搜索  
+                |--for(SearchComponent c : components)        |完成返回的Response的处理  
+                            |--c.handleResponses(rb, srsp.getShardRequest());  
+        |-- for(SearchComponent c : components)   
+                |-- c.finishStage(rb);  |rb请求响应完成处理  
+           
+
+  
+|--SolrIndexSearcher.getDocSet(List<query>)  
+    |--if (queries.size()==1) return getDocSet(queries.get(0)) ｜Query集合为1则直接处理  
+    |--for (int i=0; i<sets.length; i++)  |集合存在多个query,且query可能为not查询  
+        |--Query q = queries.get(i);  |取到第i个query  
+        |--Query posQuery = QueryUtils.getAbs(q);  |如果为negative，则为not，则返回相应的补集  
+        |--sets[i] = getPositiveDocSet(posQuery);  |查询query获取DocSet集合  
+        |--if (q==posQuery) |判断是否为negative  
+            |--nge[i] = false;    |为后续判断  
+            |--answer = sets[i];  |是postivi查询设置返回的answer值  
+        |--neg[i] = true;     |否则为正向  
+    |--if(answer == null) answer = getPositiveDocSet(matchAllDocsQuery);  |如果answer为空，则无positive query  
+    |--for (int i=0; i<sets.length; i++)     
+        |-- if (neg[i]) answer = answer.andNot(sets[i]);    ｜合并negative查询的answer结果集，并取补集  
+     for (int i=0; i<sets.length; i++)   
+        |-- if (!neg[i] && i!=smallestIndex)   
+            |--answer = answer.intersection(sets[i]);   |--循环set集合，取交集生成新的DocSet，详见HashDocSet  
+    |--return answer;  
+      
+  
+|--SolrIndexSearcher.getPositiveDocSet(Query q)  
+    |--if (filterCache != null)  
+        |--answer = (DocSet)filterCache.get(q);  
+    |--else  
+        |--answer = getDocSetNC(q,null);  |normal way to get DocSet  
+        |--if (filterCache != null) filterCache.put(q,answer);  |保存至filterCache当中  
+  
+   
+|--getDocListC(QueryResult qr, QueryCommand cmd)  |通过QueryCommmand进行查找   
+    |--if (queryResultCache != null && cmd.getFilter()==null) |从queryResultCache中进行查找  
+        |--key = new QueryResultKey(cmd.getQuery(), cmd.getFilterList(), cmd.getSort(), cmd.getFlags());  |计算key值  
+        |--if ((cmd.getFlags() & NO_CHECK_QCACHE)==0)  
+            |--superset = (DocList)queryResultCache.get(key);  |从cache中取出DocList集合  
+                |--out.docList = superset.subset(cmd.getOffset(),cmd.getLen());  |如果子集合不为空  
+            |--if (out.docSet==null && ((cmd.getFlags() & GET_DOCSET)!=0) )   
+                        |--if (cmd.getFilterList()==null)    |如果filter为null，则直接查询  
+                    |--out.docSet = getDocSet(cmd.getQuery()); |获取DocSet集合  
+                |--else   
+                    |--newList.addAll(cmd.getFilterList());  |添加filterList的Doc集合  
+                    |--out.docSet = getDocSet(newList);    |获取DocSet集合  
+        |--return ;查询完成返回  
+    |--boolean useFilterCache=false;  |检查是否需要filterCache  
+    |--for (SortField sf : sfields)   |如果存在SortField，则返回false  
+        ｜--if (sf.getType() == SortField.SCORE)   
+            |--useFilterCache=false;  
+            |--break;  
+    |--if(useFilterCache)  
+        |--if (out.docSet == null)  |获取真实的DocSet集合  
+                |--out.docSet = getDocSet(cmd.getQuery(),cmd.getFilter());  
+            |--DocSet bigFilt = getDocSet(cmd.getFilterList());  
+            |--if (bigFilt != null) out.docSet = out.docSet.intersection(bigFilt);  
+        |--superset = sortDocSet(out.docSet,cmd.getSort(),supersetMaxDoc);  |取出子的设定的返回Doc  
+        |--out.docList = superset.subset(cmd.getOffset(),cmd.getLen());     |设置docList  
+    |--else          |此时无任何缓存，为正常处理模式  
+        |--if ((cmd.getFlags() & GET_DOCSET)!=0)   
+            |--DocSet qDocSet = getDocListAndSetNC(qr,cmd);  
+        |--else   
+            |--getDocListNC(qr,cmd);  
+        |--superset = out.docList;  
+              |--out.docList = superset.subset(cmd.getOffset(),cmd.getLen());  
+    |--if (key != null && superset.size() <= queryResultMaxDocsCached && !qr.isPartialResults())  |设置是否需要设置queryResultCache  
+            |--queryResultCache.put(key, superset);  
+      
+      
+      
+|--getDocListAndSetNC(QueryResult qr,QueryCommand cmd)  
+    |--DocSet filter = cmd.getFilter()!=null ? cmd.getFilter() : getDocSet(cmd.getFilterList()); |获取filter过滤信息  
+    |--Query query = QueryUtils.makeQueryable(cmd.getQuery()); |设定query为positive的Query条件  
+    |--final Filter luceneFilter = filter==null ? null : filter.getTopFilter();     
+    |--if (lastDocRequested<=0)  
+        |--if (!needScores)  |是否需要打分  
+            |--collector = setCollector = new DocSetCollector(smallSetSize, maxDoc);  
+        |--else  
+            |--collector = setCollector = new DocSetDelegateCollector(smallSetSize, maxDoc, new Collector()  
+        |--super.search(query, luceneFilter, collector);  |执行查询条件，获取collector信息，前面操作均为构造查询条件，并作相应的缓存的存取处理  
+        |--set = setCollector.getDocSet();  
+    |--else   
+        |--处理过程与上类似，但参数设置不同，如下   
+        |--totalHits = topCollector.getTotalHits();  
+        |--TopDocs topDocs = topCollector.topDocs(0, len);  
+        |--ids[i] = scoreDoc.doc;  
+    |--qr.setDocList(new DocSlice(0,sliceLen,ids,scores,totalHits,maxScore));  
+    |--qr.setDocSet(set);  
+    |--return filter==null ? qr.getDocSet() : null;  
+    
+    
+    
+    
+    

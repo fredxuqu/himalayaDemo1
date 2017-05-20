@@ -1,0 +1,7 @@
+1. download
+
+2. deploy
+
+3. update username and password
+	#jbcrypt:$2a$10$DdaWzN64JgUtLdvxWIflcuQu2fgrrMSAMabF5TSrGK5nXitqK9ZMS
+
