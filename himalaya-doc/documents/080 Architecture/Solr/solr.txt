@@ -255,7 +255,7 @@
 		qt query type，指定查询使用的Query Handler，默认为“standard”。
 		explainOther 设置当debugQuery=true时，显示其他的查询说明。
 		defType	设置查询解析器名称。
-			defType=edismax&boost=rank
+				defType=edismax&boost=rank
 		boost	即通过boost参数可以在原有的评分基础上再乘以这个参数，该参数可以为某个field,如果rank的值为2则提升2倍
 		timeAllowed	设置查询超时时间。
 		omitHeader	设置是否忽略查询结果返回头信息，默认为“false”。

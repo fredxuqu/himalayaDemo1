@@ -24,7 +24,7 @@ public class AddressDaoImplTest extends BaseTestCase{
 
 	@Before
 	public void setUp()throws Exception{
-		logger.info("===========driverName : " + driverName);
+		logger.info("driverName : " + driverName);
 	}
 	
 	@Test
