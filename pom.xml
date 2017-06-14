@@ -18,7 +18,6 @@
 		<module>himalaya-zookeeper</module>
 		<module>himalaya-search</module>
 		<module>himalaya-webservice</module>
-		<module>himalaya-webserviceclient</module>
 		<module>himalaya-assembly</module>
 	</modules>
 
