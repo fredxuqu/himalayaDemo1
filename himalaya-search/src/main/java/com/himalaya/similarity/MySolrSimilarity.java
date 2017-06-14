@@ -6,6 +6,10 @@ package com.himalaya.similarity;
 * 2017年5月23日 下午5:20:34
 * Description
 */
-public class MySolrSimilarity extends DefaultSimilarity{
+//public class MySolrSimilarity extends DefaultSimilarity{
+//
+//}
 
+public class MySolrSimilarity{
+	// TODO
 }

@@ -1,0 +1,45 @@
+
+1. 网络编程基础
+
+	BIO
+		没有缓冲区，没有channel概念，只有输入和输出流
+		阻塞式，导致通信线程被长时间阻塞
+		支持的字符集有限，不利于移植
+	
+	NIO
+		No Blocked IO
+		buffer
+			一个数组，用户存取缓冲数据，提供缓冲读写。
+			IntBuffer
+			CharBuffer
+			ByteBuffer
+			ShortBuffer
+			LongBuffer
+			DoubleBuffer
+			Buffer的读写示例：
+			Buffer buffer = InputBuffer.allocate(10);
+			buffer.put(1);
+			buffer.put(2);
+			buffer.flip(); // reset, set position to 0
+			buffer.put(1,4); // update second element to 4
+			buffer.capacity(); // capacity of buffer
+			buffer.limit(); // available element count
+			buffer.get();
+			buffer.get(i);
+			
+			int[] array = new int[]{1,2,3,4};
+			IntBuffer buffer = IntBuffer.wrap();
+			
+		channel
+			SocketChannel：客户端
+			ServerSocketChannel：服务端
+		selector
+			注册和轮询
+			Connect
+			Accept
+			Read
+			Write
+	
+			
+		
+	AIO

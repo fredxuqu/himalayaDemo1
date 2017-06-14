@@ -2,6 +2,13 @@
 
 2. deploy
 
-3. update username and password
-	#jbcrypt:$2a$10$DdaWzN64JgUtLdvxWIflcuQu2fgrrMSAMabF5TSrGK5nXitqK9ZMS
+3. start
+	java -jar jenkins.war
+
+3. update username and password in .jenkins/users/xuqu/config
+	#jbcrypt:$2a$10$DdaWzN64JgUtLdvxWIflcuQu2fgrrMSAMabF5TSrGK5nXitqK9ZMS   111111
+	
+	#jbcrypt:$2a$10$WtjxshhU/UJkZPSjd5iSLO8QmK.fJney5wnqvX4kcO6lZkYIuZ6SG   123456
+	
+	xuqu/111111
 
