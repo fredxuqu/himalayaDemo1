@@ -154,7 +154,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>himalayaService</finalName>
+		<finalName>himalayaDubbo</finalName>
 		<plugins>
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
