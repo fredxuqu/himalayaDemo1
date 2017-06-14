@@ -15,7 +15,7 @@
 		<module>himalaya-springboot</module>
 		<module>himalaya-rocketmq</module>
 		<module>himalaya-dubbo</module>
-		<module>himalaya-zookeeper</module>
+<!-- 		<module>himalaya-zookeeper</module> -->
 		<module>himalaya-search</module>
 		<module>himalaya-webservice</module>
 		<module>himalaya-webserviceclient</module>

@@ -1,6 +1,8 @@
-package com.himalaya.service;
+package com.himalaya.service.client;
 
 import org.junit.Test;
+
+import com.himalaya.service.IService;
 
 public class ServiceClientTest {
 	
