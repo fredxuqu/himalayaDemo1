@@ -1,0 +1,30 @@
+<dataConfig>
+	
+	<dataSource driver="oracle.jdbc.driver.OracleDriver" 
+				url="jdbc:oracle:thin:@localhost:1521:orcl" 
+				user="scott" 
+				password="sa" 
+				name="ds_tag_searching"/> 				
+    <document>
+        <entity name="item" datasource="ds_tag_searching" 
+				query="select ID, TAG_NAME,TYPE,STATUS,RANK,MODIFY_TIME from tb_social_statistics">            
+			<field column="ID" name="id" />
+			<field column="TAG_NAME" name="tagName" />
+			<field column="TAG_NAME" name="tagNameIK" />			
+			<field column="TYPE" name="type" />
+			<field column="STATUS" name="status" />
+			<field column="RANK" name="rank" />
+			<field column="MODIFY_TIME" name="modifyTime" />      
+    <!--dataSource driver="org.hsqldb.jdbcDriver" 
+				   url="jdbc:hsqldb:${solr.install.dir}/example/example-DIH/hsqldb/ex" 
+				   user="sa" />	
+    <document>
+        <entity name="item" 
+				query="select * from item"
+                deltaQuery="select id from item 
+							 where last_modified > '${dataimporter.last_index_time}'">            
+			<field column="NAME" name="tagName" /-->
+        </entity>
+    </document>
+</dataConfig>
+
