@@ -1,4 +1,4 @@
-package com.himalaya.nio;
+package com.himalaya.io.nio;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

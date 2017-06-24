@@ -8,6 +8,7 @@
 	
 	NIO
 		No Blocked IO
+		Buffer、Channel、Selector,NIO 的本质就是避免原始的TCP建立连接时使用三次握手的操作，减少建立网络连接的开销。
 		buffer
 			一个数组，用户存取缓冲数据，提供缓冲读写。
 			IntBuffer
@@ -40,6 +41,13 @@
 			Read
 			Write
 	
-			
-		
 	AIO
+		在NIO的基础上，引入了异步通道的概念，并提供了异步文件和异步套接字通道的实现，从而真正意义上实现了异步非阻塞，
+		NIO只是非阻塞，而不是异步，而AIO不需要通过多路复用器对注册的通道进行轮询操作既可以实现异步读写。
+		
+		AsynchronousServerSocketChannel
+		AsynchronousChannelGroup
+		ServerCompletionHandler implements CompletionHandler<AsynchronousSocketChannel, Server>
+	
+	
+	

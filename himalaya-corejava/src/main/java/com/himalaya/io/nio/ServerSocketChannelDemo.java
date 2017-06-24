@@ -1,4 +1,4 @@
-package com.himalaya.nio;
+package com.himalaya.io.nio;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -8,6 +8,11 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+/**
+ * @author: xuqu
+ * @E-mail: fredxuqu@163.com
+ * @version 2017年6月14日 下午8:22:32 Description
+ */
 public class ServerSocketChannelDemo {
 
 	public static void main(String[] args) {
