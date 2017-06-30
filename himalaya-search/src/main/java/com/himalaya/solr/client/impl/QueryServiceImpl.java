@@ -100,7 +100,10 @@ public class QueryServiceImpl implements QueryClient {
 		return query(map);
 	}
 	
-	
+	@Override
+	public String queryMultiCollections(String keywords, int rows, int pageNo) throws Exception {
+		return null;
+	}
 
 	private String query(Map<String, String> map) throws Exception {
 		JSONArray tags = new JSONArray();
