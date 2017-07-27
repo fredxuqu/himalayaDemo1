@@ -16,13 +16,14 @@ public class OuterConfigService {
 	
 	@Value("${server.sessionTimeout}")
 	private int sessionTimeout;
+	
+	@Value("${cron.tags}")
+	private String tagsCron;
 
 	@Scheduled(cron = "${cron.tags}")
 	public void execute() {
-
+		
+		logger.info("OuterConfigService, Get cron from yaml, cron : " + tagsCron);
 		logger.info("port : " + port + ",sessionTimeout :" + sessionTimeout);
-		// Thread current = Thread.currentThread();
-		// System.out.println("schedule1:"+current.getId());
-		logger.info("OuterConfigService.execute()");
 	}
 }

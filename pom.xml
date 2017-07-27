@@ -10,11 +10,13 @@
 
 	<modules>
 		<module>himalaya-corejava</module>
+		<module>himalaya-dao</module>
 		<module>himalaya-springmvc</module>
 		<module>himalaya-job</module>
 		<module>himalaya-springboot</module>
 		<module>himalaya-rocketmq</module>
-		<module>himalaya-dubbo</module>
+		<module>himalaya-dubbo-provider</module>
+		<module>himalaya-dubbo-consumer</module>
 		<module>himalaya-zookeeper</module>
 		<module>himalaya-search</module>
 		<module>himalaya-webservice</module>
@@ -40,6 +42,8 @@
 		<hibernate.version>5.0.4.Final</hibernate.version>
 		<mybatis.version>3.4.2</mybatis.version>
 		<ognl.version>3.1.6</ognl.version>
+		
+		<dubbo.version>2.4.9</dubbo.version>
 
 		<!-- log related properties -->
 		<log.root.level>info</log.root.level>
@@ -301,6 +305,19 @@
 			    <groupId>javassist</groupId>
 			    <artifactId>javassist</artifactId>
 			    <version>3.12.1.GA</version>
+			</dependency>
+			
+			<!-- Dubbo -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>${dubbo.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			
 		</dependencies>

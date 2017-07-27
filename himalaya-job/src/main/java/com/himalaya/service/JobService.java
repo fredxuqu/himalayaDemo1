@@ -23,11 +23,10 @@ public class JobService {
     @Scheduled(cron="${cron.tags}")
     public void executeTagIndex() {
  
-    	logger.info("port :" + port);
-    	logger.info("sessionTimeout :" + sessionTimeout);
-    	logger.info("cron : " + cron);
-        //Thread current = Thread.currentThread();  
-        //System.out.println("schedule1:"+current.getId());
-        logger.info("JobService.executeTagIndex");
+        logger.info("JobService.executeTagIndex start...");
+                
+        Thread t = new Thread(new TaskExecuter());
+        
+        t.start();
     }
 }

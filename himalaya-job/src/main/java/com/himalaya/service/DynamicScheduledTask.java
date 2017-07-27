@@ -33,8 +33,9 @@ public class DynamicScheduledTask implements SchedulingConfigurer {
 	//from 8 AM to 8 PM, triggered once in every ten seconds
 	//@Scheduled(cron="0/10 * 8-20 * * ?") 
     //@Scheduled(cron="0/10 * * * * ?") 
-
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+		
+		logger.info("DynamicScheduledTask started. ");
 		taskRegistrar.addTriggerTask(new Runnable(){
 
 			public void run() {
@@ -45,6 +46,7 @@ public class DynamicScheduledTask implements SchedulingConfigurer {
 
 			public Date nextExecutionTime(TriggerContext triggerContext) {
 				CronTrigger trigger = new CronTrigger(cron);
+				logger.info("Set next trigger to cron : " + cron);
 			    Date nextExecDate = trigger.nextExecutionTime(triggerContext);
 			    return nextExecDate;
 			}

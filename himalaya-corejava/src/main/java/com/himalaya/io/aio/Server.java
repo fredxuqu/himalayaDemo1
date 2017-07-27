@@ -30,7 +30,7 @@ public class Server {
 			
 			System.out.println("Server start, port : " + port);
 			
-			assc.accept(this, new ServerCompletionHandler());
+//			assc.accept(this, new ServerCompletionHandler());
 			
 			Thread.sleep(Integer.MAX_VALUE);
 		} catch (Exception e) {

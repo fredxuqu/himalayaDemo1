@@ -279,6 +279,42 @@
 7. configure and use spatial search
 
 
+8. Solr Master and Slave mode
+	<requestHandler name="/replication" class="solr.ReplicationHandler" >    
+	 	<lst name="master">  
+	   	<!-- 执行commit操作后进行replicate操作同样的设置startup, commit, optimize-->  
+		   	<str name="replicateAfter">commit</str>
+		   	<!-- 执行startup操作后进行replicate操作-->
+		   	<str name="replicateAfter">startup</str>
+		   	<!-- 复制索引时也同步以下配置文件-->
+		   	<str name="confFiles">managed-schema,stopwords.txt</str>
+		   	<!-- 验证信息, 由用户自定义用户名-->
+		   	<!-- 验证信息, 由用户自定义密码
+		   	<str name="httpBasicAuthUser">root</str>
+		   	<str name="httpBasicAuthPassword">root123</str>-->
+	 	</lst>  
+	</requestHandler> 
+	
+	<requestHandler name="/replication" class="solr.ReplicationHandler" >    
+     	<lst name="slave">  
+       		<!-- 主服务器的URL, 对于多核同步配置,一一对应即可-->  
+       		<str name="masterUrl">http://127.0.0.1:8983/solr/tags</str> 
+       		<!-- 60秒进行一次同步操作-->    
+       		<str name="pollInterval">00:00:60</str>  
+       		<!-- 压缩机制,来传输索引, 可选internal|external, internal内网, external外网-->    
+       		<str name="compression">internal</str>  
+       		<!-- 设置超时时间-->    
+       		<str name="httpConnTimeout">50000</str>     
+       		<str name="httpReadTimeout">500000</str>     
+       		<!-- 验证信息, 要与master服务器匹配   
+       		<str name="httpBasicAuthUser">root</str>     
+       		<str name="httpBasicAuthPassword">root123</str> -->     
+     	</lst>  
+	</requestHandler>
+	
+	
+9. Solr swap
+	http://localhost:8983/solr/admin/cores?action=SWAP&core=tagmaster&other=tagslave
 
 
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+					   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
+					   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+					   http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<context:property-placeholder location="classpath:service.properties"/>
+		
+	<!--配置service的包扫描，自动注入Service -->
+	<context:annotation-config />
+	<context:component-scan base-package="com.himalaya" />
+	
+	<!-- 具体的实现bean -->
+	<bean id="himalayaService" class="com.himalaya.service.HimalayaServiceImpl" />
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="himalaya_provider" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
+
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20880" />
+
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service interface="com.himalaya.service.HimalayaService" ref="himalayaService" />
+	
+		<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="hehe_consumer" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- <dubbo:registry address="multicast://224.5.6.7:1234" /> -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
+
+	<!-- 生成远程服务代理，可以像使用本地bean一样使用demoService -->
+	<dubbo:reference id="demoService"
+		interface="com.unj.dubbotest.provider.DemoService" />
+	
+</beans>

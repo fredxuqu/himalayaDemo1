@@ -6,10 +6,10 @@ spring:
 spring:
   profiles: dev
 cron:
-  tags: 0/5 * * * * ? 
+  tags: 0 15 10 ? * 6L 2000
 
 ---
 spring:
   profiles: test
 cron:
-  tags: 0/10 * * * * ? 
+  tags: 0/50 * * * * ?

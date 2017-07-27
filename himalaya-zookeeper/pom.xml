@@ -18,12 +18,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-			<version>0.5</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
 		<dependency>
@@ -31,31 +25,17 @@
 			<artifactId>dom4j</artifactId>
 		</dependency>
 
+		<!-- Zookeeper -->
+		<!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+		    <groupId>org.apache.zookeeper</groupId>
+		    <artifactId>zookeeper</artifactId>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.101tec/zkclient -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	    <dependency>  
-	        <groupId>org.springframework.boot</groupId>  
-	        <artifactId>spring-boot-devtools</artifactId>  
-	    </dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
+		    <groupId>com.101tec</groupId>
+		    <artifactId>zkclient</artifactId>
 		</dependency>
 	</dependencies>
 	
