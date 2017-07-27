@@ -57,7 +57,7 @@ public class ServerCompletionHandler implements CompletionHandler<AsynchronousSe
 
 	@Override
 	public void completed(AsynchronousServerSocketChannel result, Server attachment) {
-		attachment.assc.accept(attachment, this);
-		read(result);
+//		attachment.assc.accept(attachment, this);
+//		read(result);
 	}
 }
