@@ -43,7 +43,7 @@
 		<mybatis.version>3.4.2</mybatis.version>
 		<ognl.version>3.1.6</ognl.version>
 		
-		<dubbo.version>2.4.9</dubbo.version>
+		<dubbo.version>2.5.4-SNAPSHOT</dubbo.version>
 
 		<!-- log related properties -->
 		<log.root.level>info</log.root.level>
