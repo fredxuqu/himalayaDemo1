@@ -1,0 +1,21 @@
+1. Introduce
+	
+2. Technical Term
+	Producer: Message producer, to be responsible to produce messages.
+	Consumer: Message consumer, to be responsible to consume messages.
+	
+	Push Consumer
+	Pull Consumer
+	
+	Producer group
+	Consumer group
+	
+	Broker: be responsible to store messages and forward messages
+	
+	Broadcast
+	
+	集群消费
+	顺序消费
+	
+	
+3.  

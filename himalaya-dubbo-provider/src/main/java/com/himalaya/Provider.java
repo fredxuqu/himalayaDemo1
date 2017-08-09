@@ -1,5 +1,7 @@
 package com.himalaya;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -11,6 +13,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 */
 public class Provider {
 
+	private final static Logger LOGGER = LoggerFactory.getLogger(Provider.class);
+	
 	public static void main(String[] args) throws Exception {
 		
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
@@ -18,9 +22,11 @@ public class Provider {
 		
 		context.start();
 
-		while(true){
-			Thread.sleep(5000);
-			System.out.println("Provider is running...");
-		}
+//		while(true){
+//			Thread.sleep(5000);
+//			LOGGER.info("Provider is running...");
+//		}
+		LOGGER.info("Provider is running...");
+		System.in.read();
 	}
 }

@@ -1,0 +1,129 @@
+
+1. Download dubbo from github
+	https://github.com/alibaba/dubbo
+	
+2. Build Latest package by maven
+
+3. Prepare provider
+	a.	add interface com.himalaya.service.HimalayaService and implements HimalayaService
+	public interface HimalayaService {
+		public List<UserDTO> service();
+		public String login(String userName);
+	}
+	
+	b.	add start class
+	public class Provider {
+		public static void main(String[] args) throws Exception {
+			ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+					new String[] { "applicationContext.xml" });
+			context.start();
+			System.in.read();
+		}
+	}
+	
+	c.	add below config to applicationContext.xml
+	<!-- 具体的实现bean -->
+	<bean id="himalayaService" class="com.himalaya.service.impl.HimalayaServiceImpl" />
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="himalaya-provider" />
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20880" />
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service interface="com.himalaya.service.HimalayaService" ref="himalayaService" />
+	
+4. Prepare consumer
+	a.	add interface com.himalaya.service.HimalayaService
+	public interface HimalayaService {
+		public List<UserDTO> service();
+		public String login(String userName);
+	}
+	
+	b.	add start class
+	public class Consumer {
+		public static void main(String[] args) throws Exception {
+			ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+					new String[] { "applicationContext.xml" });
+			context.start();
+			HimalayaService service = (HimalayaService) context.getBean("himalayaService");
+			String result = service.login("tom");
+			System.in.read();
+		}
+	}
+	
+	c.	add below config to applicationContext.xml
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<dubbo:application name="himalaya-consumer" />
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- <dubbo:registry address="multicast://224.5.6.7:1234" /> -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
+	<!-- 生成远程服务代理，可以像使用本地bean一样使用himalayaService -->
+	<dubbo:reference id="himalayaService" interface="com.himalaya.service.HimalayaService" />
+	
+5. Deploy dubbo-admin
+	Get dubbo-admin war file from built target folder
+	
+	remove all files from tomcat\webapps\ROOT
+	
+	unzip dubbo-admin war to tomcat\webapps\ROOT
+	
+	start tomcat
+	
+	open http://localhost:8080 
+	username/password : root/root
+
+
+http://dubbo.io/user-guide/preface/background.html
+6. Dubbo architecture
+	架构的演变
+	-ORM 
+	-MVC
+	-RPC 
+	-SOA
+	
+	服务注册中心：服务注册与发现（zk实现）,使服务的位置透明，客户通过注册中心获取服务提供方的地址列表，实现软负载均衡和失效转移（failover），降低对负载均衡硬件的依赖
+	服务治理中心：服务文档，负责人，审批流程
+	服务调度中心：服务容量评估，可以根据每个服务的权重、服务器的权重，分配任务量。
+	服务监控中心：服务调用统计，关键路径分析，统计每天的调用量，响应时间，作为系统容量规划的参考标准
+	
+	
+	Dubbo架构
+	Registry	(subscribe/notify/register)
+	Consumer	(invoke)
+	Provider & Container	(start)
+	Monitor		(count)
+	
+	Provider: 暴露服务的提供方
+	Consumer： 调用远程服务的服务消费方
+	Registry：服务注册与发现的注册中心
+	Monitor：统计服务的调用次数和调用时间的监控中心
+	Container：服务运行容器
+	
+	调用关系和启动顺序
+	0-Container启动、加载、运行服务提供者
+	1-服务提供者启动时向注册中心注册自己提供的服务
+	2-服务消费者在启动的时候，向注册中心订阅自己所需要的服务
+	3-注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者。
+	4-服务消费者从服务提供者地址列表中基于软负载均衡算法，选一台服务提供者进行调用，如果调用失败，则再选则另外一台
+	5-服务消费者和提供者在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心
+	
+	各项性能保证
+	连通性
+		服务提供者和消费者只有在启动的时候才与注册中心交互
+		服务提供者如果宕机，注册中心会立即将事件推送给消费者
+		如果注册中心宕机，不会影响现有的调用，因为消费者已经缓存了服务提供者地址，但是不能提供新的服务注册和订阅。
+	健壮性
+		监控中心宕机，不影响系统使用，只是丢失部分采样数据
+		注册中心对等集群，任何一台宕机后，会自动切换到另外一台
+		注册中心全部宕机后，消费者依然可以根据本地缓存和服务端通讯
+		服务端无状态，任意一台宕机后，不影响使用
+		服务端全部宕机后，消费端将无法使用，并将无限次重连，等待服务恢复
+	伸缩性
+		注册中心对等集群，可以动态增加机器部署实例
+		服务提供者无状态，可以动态增加机器部署实例，并向注册中心注册
+	升级性
+	
+7. 	
+
+	

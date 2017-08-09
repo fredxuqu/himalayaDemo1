@@ -270,6 +270,8 @@
 		defType=edismax&qf=fieldname1^2 fieldname2^1
 		按照score进行排序的时候，会优先显示fieldname1字段匹配到的记录。
 		注意，q里面不能规定查询字段，否则为字段设置的权重就不会起作用。
+	
+	4. subQuery
 		
 	1. keep search order
 		localhost:8983/solr/news/select/q=newscontent="南华"~8&fl=id,newscontent&sort=score desc&fq=status:2&start=0&rows=10&defType=complexphrase&wt=json&indent=true

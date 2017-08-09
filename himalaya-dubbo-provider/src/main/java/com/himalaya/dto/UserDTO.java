@@ -1,6 +1,7 @@
 package com.himalaya.dto;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.alibaba.dubbo.common.json.JSON;
 
@@ -11,7 +12,7 @@ import com.alibaba.dubbo.common.json.JSON;
 * 2017年8月8日 下午5:37:59
 * Description
 */
-public class UserDTO {
+public class UserDTO implements Serializable {
 	
 	private int id;
 	private String name;
