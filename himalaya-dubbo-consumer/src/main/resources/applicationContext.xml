@@ -29,4 +29,10 @@
 	<!-- 生成远程服务代理，可以像使用本地bean一样使用himalayaService -->
 	<dubbo:reference id="himalayaService" interface="com.himalaya.service.HimalayaService" />
 	
+	<!-- 配置集群的容错模式 -->
+	<dubbo:reference cluster="failsafe" />
+	
+	<!-- 配置重试次数  -->
+	<dubbo:reference retries="2" />
+	
 </beans>
