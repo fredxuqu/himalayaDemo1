@@ -13,7 +13,6 @@
 		<module>himalaya-dao</module>
 		<module>himalaya-springmvc</module>
 		<module>himalaya-job</module>
-		<module>himalaya-springboot</module>
 		<module>himalaya-rocketmq</module>
 		<module>himalaya-dubbo-provider</module>
 		<module>himalaya-dubbo-consumer</module>
@@ -38,7 +37,7 @@
 		<rocketmq.client.version>3.2.6</rocketmq.client.version>
 		<cxfapi.version>2.5.0</cxfapi.version>
 		<servlet.version>2.5</servlet.version>
-		<spring.boot.version>1.5.2.RELEASE</spring.boot.version>
+		<spring.boot.version>1.4.6.RELEASE</spring.boot.version>
 		<hibernate.version>5.0.4.Final</hibernate.version>
 		<mybatis.version>3.4.2</mybatis.version>
 		<ognl.version>3.1.6</ognl.version>
@@ -55,6 +54,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.apache.maven.shared</groupId>
+				<artifactId>maven-shared-utils</artifactId>
+				<version>0.4</version>
+			</dependency>
+		
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -305,6 +310,13 @@
 			    <groupId>javassist</groupId>
 			    <artifactId>javassist</artifactId>
 			    <version>3.12.1.GA</version>
+			</dependency>
+			
+			<!-- https://mvnrepository.com/artifact/net.sourceforge.javacsv/javacsv -->
+			<dependency>
+			    <groupId>net.sourceforge.javacsv</groupId>
+			    <artifactId>javacsv</artifactId>
+			    <version>2.0</version>
 			</dependency>
 			
 			<!-- Dubbo -->

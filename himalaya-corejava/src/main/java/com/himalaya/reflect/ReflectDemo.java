@@ -23,22 +23,62 @@ public class ReflectDemo {
 	public static void main(String[] args)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, SecurityException, NoSuchFieldException, NoSuchMethodException {
-		// TODO Auto-generated method stub
-
+		
 		// Demo1. 通过Java反射机制得到类的包名和类名
-		Demo1();
+
+		Person person = new Person();
+		System.out.println("Package Name is " + person.getClass().getPackage().getName());
+		System.out.println("Class Name is " + person.getClass().getName());
 		System.out.println("===============================================");
 
+		
 		// Demo2. 验证所有的类都是Class类的实例对象
-		Demo2();
+		// 定义两个类型都未知的Class , 设置初值为null, 看看如何给它们赋值成Person类
+		Class<?> class1 = null;
+		Class<?> class2 = null;
+
+		// 写法1, 可能抛出 ClassNotFoundException [多用这个写法]
+		class1 = Class.forName("com.himalaya.reflect.Person");
+		System.out.println("Demo2:(写法1) 包名: " + class1.getPackage().getName() + "，" + "完整类名: " + class1.getName());
+
+		// 写法2
+		class2 = Person.class;
+		System.out.println("Demo2:(写法2) 包名: " + class2.getPackage().getName() + "，" + "完整类名: " + class2.getName());
 		System.out.println("===============================================");
 
+		
+		
 		// Demo3. 通过Java反射机制，用Class 创建类对象[这也就是反射存在的意义所在]，无参构造
-		Demo3();
+		Class<?> class3 = null;
+		class3 = Class.forName("com.himalaya.reflect.Person");
+		// 由于这里不能带参数，所以你要实例化的这个类Person，一定要有无参构造函数哈～
+		Person person3 = (Person) class3.newInstance();
+		person3.setAge(20);
+		person3.setName("LeeFeng");
+		System.out.println("Demo3: " + person3.getName() + " : " + person3.getAge());
 		System.out.println("===============================================");
 
 		// Demo4: 通过Java反射机制得到一个类的构造函数，并实现构造带参实例对象
-		Demo4();
+		Class<?> class4 = null;
+		Person person1 = null;
+		Person person2 = null;
+
+		class4 = Class.forName("com.himalaya.reflect.Person");
+		// 得到一系列构造函数集合
+		Constructor<?>[] constructors = class4.getConstructors();
+
+		person1 = (Person) constructors[0].newInstance();
+		person1.setAge(30);
+		person1.setName("leeFeng");
+
+		person2 = (Person) constructors[1].newInstance(20, "leeFeng");
+
+		System.out.println("Demo4: " + person1.getName() + " : " + person1.getAge() + "  ,  " + person2.getName()
+				+ " : " + person2.getAge());
+		
+		Constructor<?> constructor = class4.getConstructor(new Class[]{int.class, String.class});
+		Person person4 = (Person)constructor.newInstance(new Object[]{25,"fredxuqu"});
+		System.out.println("user name : " + person4.getName());
 		System.out.println("===============================================");
 
 		// Demo5: 通过Java反射机制操作成员变量, set 和 get
@@ -56,81 +96,6 @@ public class ReflectDemo {
 		// Demo8: 通过Java反射机制获得类加载器
 		Demo8();
 		System.out.println("===============================================");
-
-	}
-
-	/**
-	 * Demo1: 通过Java反射机制得到类的包名和类名
-	 */
-	public static void Demo1() {
-		Person person = new Person();
-		System.out.println("Demo1: 包名: " + person.getClass().getPackage().getName() + "，" + "完整类名: "
-				+ person.getClass().getName());
-	}
-
-	/**
-	 * Demo2: 验证所有的类都是Class类的实例对象
-	 * 
-	 * @throws ClassNotFoundException
-	 */
-	public static void Demo2() throws ClassNotFoundException {
-		// 定义两个类型都未知的Class , 设置初值为null, 看看如何给它们赋值成Person类
-		Class<?> class1 = null;
-		Class<?> class2 = null;
-
-		// 写法1, 可能抛出 ClassNotFoundException [多用这个写法]
-		class1 = Class.forName("com.himalaya.reflect.Person");
-		System.out.println("Demo2:(写法1) 包名: " + class1.getPackage().getName() + "，" + "完整类名: " + class1.getName());
-
-		// 写法2
-		class2 = Person.class;
-		System.out.println("Demo2:(写法2) 包名: " + class2.getPackage().getName() + "，" + "完整类名: " + class2.getName());
-	}
-
-	/**
-	 * Demo3: 通过Java反射机制，用Class 创建类对象[这也就是反射存在的意义所在]
-	 * 
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
-	public static void Demo3() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Class<?> class1 = null;
-		class1 = Class.forName("com.himalaya.reflect.Person");
-		// 由于这里不能带参数，所以你要实例化的这个类Person，一定要有无参构造函数哈～
-		Person person = (Person) class1.newInstance();
-		person.setAge(20);
-		person.setName("LeeFeng");
-		System.out.println("Demo3: " + person.getName() + " : " + person.getAge());
-	}
-
-	/**
-	 * Demo4: 通过Java反射机制得到一个类的构造函数，并实现创建带参实例对象
-	 * 
-	 * @throws ClassNotFoundException
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 * @throws IllegalArgumentException
-	 */
-	public static void Demo4() throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
-		Class<?> class1 = null;
-		Person person1 = null;
-		Person person2 = null;
-
-		class1 = Class.forName("com.himalaya.reflect.Person");
-		// 得到一系列构造函数集合
-		Constructor<?>[] constructors = class1.getConstructors();
-
-		person1 = (Person) constructors[0].newInstance();
-		person1.setAge(30);
-		person1.setName("leeFeng");
-
-		person2 = (Person) constructors[1].newInstance(20, "leeFeng");
-
-		System.out.println("Demo4: " + person1.getName() + " : " + person1.getAge() + "  ,  " + person2.getName()
-				+ " : " + person2.getAge());
 
 	}
 

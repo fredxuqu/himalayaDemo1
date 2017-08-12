@@ -1,0 +1,55 @@
+1. What's redis?
+2. Why we choose redis to store data
+3. How many data structures redis supported
+	String
+	List
+	Set
+	Hash
+	ZSet
+4. Commands
+	String
+		GET
+		SET
+		DEL
+	List
+		RPUSH
+		LRANGE
+		LINDEX
+		LPOP
+	Set
+		SADD
+		SMEMBERS
+		SISMEMBER
+		SREM
+	Hash
+		HSET
+		HGET
+		HGETALL
+		HDEL
+	ZSet
+		ZADD
+		ZRANGE
+		ZRANGESCORE
+		ZREM
+		
+5. Master-Slave mode
+
+6. Distributed Application
+
+7. Authentication
+	// change redis.conf to set the password
+	requirepass test123  
+	
+	// set password in runtime
+	config set requirepass test123
+	
+	// get password
+	config get requirepass
+	
+	// login
+	auth test123  
+	
+	
+	
+	
+	

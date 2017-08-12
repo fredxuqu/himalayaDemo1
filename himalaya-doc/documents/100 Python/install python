@@ -1,0 +1,81 @@
+*******************************
+** Install Python In Windows **
+*******************************
+https://www.python.org/downloads/windows/
+
+*******************************
+** Install Python In OS X    **
+*******************************
+https://www.python.org/downloads/windows/
+
+*******************************
+** Install Python In Linux   **
+*******************************
+sudo apt-get update
+sudo apt-get install make gcc python-dev
+
+downloa redis from http://redis.io/download
+
+download redis
+wget -q http://redis.googlecode.com/files/redis-2.6.9.tar.gz
+tar -xzf redis-2.6.9.tar.gz
+cd redis-2.6.9
+make
+cd src
+make all
+cd src
+make install
+
+wget -q http://peak.telecommunity.com/dist/ez_setup.py
+sudo python ez_setup.py
+
+
+*******************************
+** Install Redis             **
+*******************************
+C:\Python27>python
+Python 2.7.14rc1 (v2.7.14rc1:c707893, Aug 27 2017, 00:09:00) [MSC v.1500 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from urllib import urlopen
+>>> data = urlopen('http://peak.telecommunity.com/dist/ez_setup.py
+  File "<stdin>", line 1
+    data = urlopen('http://peak.telecommunity.com/dist/ez_setup.py
+                                                                 ^
+SyntaxError: EOL while scanning string literal
+>>> data = urlopen('http://peak.telecommunity.com/dist/ez_setup.py')
+>>> open('ez_setup.py','wb').write(data.read())
+>>> exit()
+
+C:\Python27>python ez_setup.py
+Setuptools version 0.6c11 or greater has been installed.
+(Run "ez_setup.py -U setuptools" to reinstall or upgrade.)
+
+C:\Python27>python -m easy_install redis
+Searching for redis
+Reading https://pypi.python.org/simple/redis/
+Downloading https://pypi.python.org/packages/09/8d/6d34b75326bf96d4139a2ddd8e74b80840f800a0a79f9294399e212cb9a7/redis-2.10.6.tar.gz#md5=048
+d0bba2f4d835005c3b
+Best match: redis 2.10.6
+Processing redis-2.10.6.tar.gz
+Writing c:\users\xuqu\appdata\local\temp\easy_install-e29p5q\redis-2.10.6\setup.cfg
+Running redis-2.10.6\setup.py -q bdist_egg --dist-dir c:\users\xuqu\appdata\local\temp\easy_install-e29p5q\redis-2.10.6\egg-dist-tmp-ymom4b
+warning: no previously-included files found matching '__pycache__'
+warning: no previously-included files matching '*.pyc' found under directory 'tests'
+zip_safe flag not set; analyzing archive contents...
+Moving redis-2.10.6-py2.7.egg to c:\python27\lib\site-packages
+Adding redis 2.10.6 to easy-install.pth file
+
+Installed c:\python27\lib\site-packages\redis-2.10.6-py2.7.egg
+Processing dependencies for redis
+Finished processing dependencies for redis
+
+C:\Python27>python
+Python 2.7.14rc1 (v2.7.14rc1:c707893, Aug 27 2017, 00:09:00) [MSC v.1500 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import redis
+>>> conn = redis.Redis()
+>>> conn.set('hello','world')
+True
+>>> conn.get('hello')
+'world'
+>>>

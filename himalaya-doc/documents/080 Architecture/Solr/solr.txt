@@ -168,7 +168,33 @@
 	
 	<field name="text_ik"  type="text_ik" indexed="true"  stored="true"  multiValued="true" />
 	
+5. Config synonyms
+	add synonyms filter
+	<!-- 集成IK分词器 -->
+	<fieldType name="text_ik" class="solr.TextField">
+	   <analyzer type="index">
+	     <tokenizer class="org.wltea.analyzer.lucene.IKTokenizerFactory" isMaxWordLength="false" useSmart="false" />
+		<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
+		<filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt" enablePositionIncrements="true" />
+		<filter class="solr.LowerCaseFilterFactory" />
+	  </analyzer>
+	  <analyzer type="query">
+	     <tokenizer class="org.wltea.analyzer.lucene.IKTokenizerFactory" isMaxWordLength="True" useSmart="false" />
+		<filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
+		<filter class="solr.LowerCaseFilterFactory" />
+	   </analyzer>
+	</fieldType>
 	
+	update core configuration
+	core\conf\synonyms.txt
+	add synonyms items
+	深圳,深圳市,鹏城
+	长沙,长沙市,长沙县,星城
+	南京,金陵,建康
+	台湾,台灣,臺灣
+	
+	new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("E:/solr/solr-6.3.0/server/solr/iktest/conf/synonyms.txt"),false), "utf-8"));
+	to write synonyms.txt file
 		
 4. solr6.3.0 + tomcat8 
 	blog:	http://blog.csdn.net/yzl_8877/article/details/53199355
