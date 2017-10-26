@@ -94,6 +94,20 @@
 				<artifactId>servlet-api</artifactId>
 				<version>${servlet.version}</version>
 			</dependency>
+			
+			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+			<dependency>
+			    <groupId>org.apache.httpcomponents</groupId>
+			    <artifactId>httpclient</artifactId>
+			    <version>4.5.3</version>
+			</dependency>	
+			
+			<!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
+			<dependency>
+				<groupId>com.squareup.okhttp</groupId>
+				<artifactId>okhttp</artifactId>
+				<version>2.7.5</version>
+			</dependency>					
 
 			<!-- logs for logging -->
 			<dependency>

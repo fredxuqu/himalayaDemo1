@@ -12,3 +12,7 @@
 	
 	xuqu/111111
 
+4. configure java 
+5. configure maven
+6. configure git
+7. configure
