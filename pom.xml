@@ -256,7 +256,14 @@
 			    <groupId>org.apache.solr</groupId>
 			    <artifactId>solr-core</artifactId>
 			    <version>${solr.version}</version>
-			</dependency>			
+			</dependency>	
+			<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+			<dependency>
+			    <groupId>org.apache.lucene</groupId>
+			    <artifactId>lucene-core</artifactId>
+			    <version>${solr.version}</version>
+			</dependency>
+					
 			
 			<!-- data analysis -->
 			<dependency>

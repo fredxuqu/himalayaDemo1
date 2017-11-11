@@ -3,12 +3,15 @@ package com.himalaya.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.solr.core.SolrDeletionPolicy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
 public class ConvertSpecialChar {
 	
+	SolrDeletionPolicy a;
 	@Before
 	public void setUp() throws Exception {
 	}
