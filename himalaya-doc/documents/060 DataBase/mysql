@@ -1,5 +1,90 @@
-root Cheese#21
-test 
+**********************************
+** Macbook Install Mysql        **
+**********************************
+root@localhost: !4;Wx9TBRMyw
+
+root Admin#@1010
+test Admin#@1010Test
+
+MySQL修改密码
+
+关闭服务
+系统偏好设置->MySQL->Stop MySQL Server
+
+安全模式进入MySQL
+annadeMacBook-Pro:~ anna$ sudo mysqld_safe --skip-grant-tables
+
+重新打开一个终端 进入MySQL控制台
+annadeMacBook-Pro:~ anna$ mysql -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.7-rc MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2015, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+提示已经成功进入控制台
+
+修改密码，sql语句
+mysql> update mysql.user set authentication_string=PASSWORD('Admin#@1010') where user='root';
+Query OK, 1 row affected, 1 warning (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 1
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+修改成功，再次进入控制台
+mysql> show databases;
+这次可以进去了，但是随便执行一条语句依然报错啊
+
+ERROR 1820 (HY000): You must SET PASSWORD before executing this statement
+按照提示再次设置密码
+mysql> set password for root@localhost=password('Admin#@1010');
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+这次OK了，接下来就可以正常建表、查询 使用了。
+
+mysql的启动和停止
+mysql.server是包含在和 MySQL Unix分发包中的启动脚本,该脚本可以用于Linux和Solaris类似的系统中。这种系统使用 V-style（区别与BSD-style）系统运行目录来启动和停止服务。
+mysql.server可以在MySQL安装目录中的support-files文件夹中找到，如果使用的是rpm安装包方式(与之相对应的另一种安装包方式是dpkg)，mysql.server脚本会被安装在/etc/init.d,而且会被重命名mysql。
+
+另外一些发行版本会重命名为mysqld
+
+1. Linux下启动/停止/重启启动命令如下：
+/etc/init.d/mysqld start
+/etc/init.d/mysqld stop
+/etc/init.d/mysqld restart
+
+2. Linux下以Service方式启动/停止/重启MySQL命令：
+service mysqld start
+service mysqld stop
+service mysqld restart
+
+or
+
+service mysql start
+service mysql stop
+service mysql restart
+service 命令就是调用/etc/init.d/下边的脚本来启动服务，等于直接使用/etc/init.d/* start
+
+service 描述中讲到
+DESCRIPTION
+service runs a System V init script in as predictable environment as possible, removing most environment variables and with current working directory set to /.
+The SCRIPT parameter specifies a System V init script, located in /etc/init.d/SCRIPT.
+3. MAC OX命令行启动/停止/重启MySQL命令:
+
+sudo /usr/local/mysql/support-files/mysql.server start
+sudo /usr/local/mysql/support-files/mysql.server stop
+sudo /usr/local/mysql/support-files/mysql.server restart
+
+**********************************
+** Macbook Install Mysql  End   **
+**********************************
+
+
+
 
 MacOS connect to mysql database
 /usr/local/mysql/bin/mysql -uroot -p
