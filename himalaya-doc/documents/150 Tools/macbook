@@ -10,3 +10,9 @@
 	check installed software
 	sudo brew search /apache*/
 	
+
+2. youku cache
+	/Users/anna/Library/Containers/com.youku.mac/Data/Library/Application Support/Youku
+	
+3. check folder size and sorting
+	du -h -d 1|sort
