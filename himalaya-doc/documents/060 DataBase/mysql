@@ -6,6 +6,9 @@ root@localhost: !4;Wx9TBRMyw
 root Admin#@1010
 test Admin#@1010Test
 
+schema : solr
+
+
 MySQL修改密码
 
 关闭服务
