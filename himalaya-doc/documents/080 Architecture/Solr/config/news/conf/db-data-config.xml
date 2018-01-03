@@ -5,6 +5,8 @@
     			password="Admin#@1010Test"
     			name="ds_news"/>
     			
+    <!-- dataSource jndiName="java:comp/env/jdbc/pysearch" type="JdbcDataSource" name="pysearchDS"/ --> 
+    			
     <document>
         <entity name="item" 
         		query="select * from tb_news" >

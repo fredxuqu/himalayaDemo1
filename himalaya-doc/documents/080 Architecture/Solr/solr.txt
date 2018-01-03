@@ -4,6 +4,9 @@
 	
 	unzip 
 	https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/6.2.1/solr-6.2.1.tgz
+	
+	source code
+	https://github.com/apache/lucene-solr
 
 2. Config dataSource for DIH
 	<dataConfig>
@@ -143,6 +146,34 @@
 			<res-type>java.lang.String</res-type>
 			<res-auth>Container</res-auth>
 		</resource-ref>
+		
+3.1 jndi for tomcat
+	
+	<Resource 
+         name="jdbc/pysearch"
+         auth="Container"
+         factory="com.alibaba.druid.pool.DruidDataSourceFactory" 
+         type="javax.sql.DataSource"
+         driverClass="oracle.jdbc.driver.OracleDriver"
+         url="jdbc:oracle:thin:@localhost:1521:orcl"
+         username="scott" 
+         password="sa"
+         maxActive="50"
+         maxWait="10000"
+         removeabandoned="true"
+         removeabandonedtimeout="60"
+         logabandoned="false"
+         filters="stat"/>
+    
+   
+   	<!--dataSource driver="oracle.jdbc.driver.OracleDriver" 
+				url="jdbc:oracle:thin:@localhost:1521:orcl" 
+				user="scott" 
+				password="sa" 
+				name="ds_tag_searching"/--> 
+								
+	<dataSource jndiName="java:comp/env/jdbc/pysearch" type="JdbcDataSource" name="pysearchDS"/>
+	
 
 4. Config smartcn
 	
@@ -298,6 +329,11 @@
 		注意，q里面不能规定查询字段，否则为字段设置的权重就不会起作用。
 	
 	4. subQuery
+	
+	5. left match
+		fileType of tagNameStr should be string
+		{!prefix f=tagNameStr}长沙市开福
+		tagNameStr:长沙市开福*
 		
 	1. keep search order
 		localhost:8983/solr/news/select/q=newscontent="南华"~8&fl=id,newscontent&sort=score desc&fq=status:2&start=0&rows=10&defType=complexphrase&wt=json&indent=true
@@ -386,8 +422,7 @@ version – 查询语法的版本，建议不使用它，由服务器指定默�
 date:{200707 TO 200710}
 ” 转义操作符，特殊字符包括+ – & | ! ( ) { } [ ] ^ ” ~ * ? : “
 二.高亮
-
-     hl-highlight，h1=true，表示采用高亮。可以用h1.fl=field1,field2 来设定高亮显示的字段。
+hl-highlight，h1=true，表示采用高亮。可以用h1.fl=field1,field2 来设定高亮显示的字段。
 hl.fl: 用空格或逗号隔开的字段列表。要启用某个字段的highlight功能，就得保证该字段在schema中是stored。如果该参数未被给出，那么就会高 亮默认字段 standard handler会用df参数，dismax字段用qf参数。你可以使用星号去方便的高亮所有字段。如果你使用了通配符，那么要考虑启用 hl.requiredFieldMatch选项。
 hl.requireFieldMatch:
 如果置为true，除非该字段的查询结果不为空才会被高亮。它的默认值是false，意味 着它可能匹配某个字段却高亮一个不同的字段。如果hl.fl使用了通配符，那么就要启用该参数。尽管如此，如果你的查询是all字段（可能是使用 copy-field 指令），那么还是把它设为false，这样搜索结果能表明哪个字段的查询文本未被找到
@@ -418,7 +453,7 @@ hl.regex.pattern:正则表达式的pattern
 hl.regex.slop:这是hl.fragsize能变化以适应正则表达式的因子。默认值是0.6，意思是如果hl.fragsize=100那么fragment的大小会从40-160.
 三.分组查询：
  
-1.       Field Facet
+1.Field Facet
 Facet 字段通过在请求中加入 ”facet.field” 参数加以声明 , 如果需要对多个字段进行 Facet查询 , 那么将该参数声明多次 . 比如
 /select?q=联想
 &facet=on
