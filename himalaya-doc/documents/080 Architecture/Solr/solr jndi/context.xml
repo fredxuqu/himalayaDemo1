@@ -33,9 +33,25 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
+    
+    <Resource 
+         name="jdbc/mysqlDataSource"
+         auth="Container"
+         factory="com.alibaba.druid.pool.DruidDataSourceFactory" 
+         type="javax.sql.DataSource"
+         driverClass="com.mysql.jdbc.Driver"
+         url="jdbc:mysql://localhost:3306/test"
+         username="root" 
+         password="admin"
+         maxActive="50"
+         maxWait="10000"
+         removeabandoned="true"
+         removeabandonedtimeout="60"
+         logabandoned="false"
+         filters="stat"/>
 				
 	<Resource 
-         name="jdbc/pysearch"
+         name="jdbc/oracleDataSource"
          auth="Container"
          factory="com.alibaba.druid.pool.DruidDataSourceFactory" 
          type="javax.sql.DataSource"
