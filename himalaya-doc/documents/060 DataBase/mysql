@@ -82,6 +82,18 @@ sudo /usr/local/mysql/support-files/mysql.server start
 sudo /usr/local/mysql/support-files/mysql.server stop
 sudo /usr/local/mysql/support-files/mysql.server restart
 
+
+Grant Privileges:
+
+GRANT ALL PRIVILEGES ON *.* TO 'test'@'192.168.1.111' IDENTIFIED BY
+'Admin#@1010Test' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'test'@'192.168.1.112' IDENTIFIED BY
+'Admin#@1010Test' WITH GRANT OPTION;
+
+GRANT ALL PRIVILEGES ON *.* TO 'test'@'192.168.1.113' IDENTIFIED BY
+'Admin#@1010Test' WITH GRANT OPTION;
+
 **********************************
 ** Macbook Install Mysql  End   **
 **********************************

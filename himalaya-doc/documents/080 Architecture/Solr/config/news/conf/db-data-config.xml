@@ -1,11 +1,11 @@
 <dataConfig>
-    <dataSource driver="com.mysql.jdbc.Driver" 
+    <!-- dataSource driver="com.mysql.jdbc.Driver" 
     			url="jdbc:mysql://127.0.0.1:3306/solr" 
     			user="test"
     			password="Admin#@1010Test"
-    			name="ds_news"/>
+    			name="ds_news"/ -->
     			
-    <!-- dataSource jndiName="java:comp/env/jdbc/pysearch" type="JdbcDataSource" name="pysearchDS"/ --> 
+    <dataSource jndiName="java:comp/env/jdbc/MysqlDataSource" type="JdbcDataSource" name="pysearchDS" /> 
     			
     <document>
         <entity name="item" 

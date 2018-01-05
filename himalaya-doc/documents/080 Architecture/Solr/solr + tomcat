@@ -1,0 +1,27 @@
+1. Standalone Mode setup
+
+cp -R /usr/local/solr-6.6.2/server/solr-webapp/webapp/ /usr/local/apache-tomcat-8.0.48/webapps/
+mv /usr/local/apache-tomcat-8.0.48/webapps/webapp /usr/local/apache-tomcat-8.0.48/webapps/solr
+
+cp /usr/local/solr-6.6.2/server/lib/ext/*.* /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/lib/
+cp /usr/local/solr-6.6.2/server/lib/metrics-*.jar /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/lib/
+cp /usr/local/solr-6.6.2/dist/solr-dataimporthandler-*.jar /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/lib/
+
+mkdir /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/classes
+
+cp /usr/local/solr-6.6.2/server/resources/log4j.properties /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/classes
+
+mkdir /usr/local/apache-tomcat-8.0.48/solr_home
+
+cp -R /usr/local/solr-6.6.2/server/solr/* /usr/local/apache-tomcat-8.0.48/solr_home
+
+cp /home/fred/mysql-connector-java-5.1.39.jar /usr/local/apache-tomcat-8.0.48/lib/
+
+cp /home/fred/druid-1.0.26.jar /usr/local/apache-tomcat-8.0.48/webapps/solr/WEB-INF/lib/
+
+cp -R /usr/local/solr-6.6.2/example/example-DIH/solr/db /usr/local/apache-tomcat-8.0.48/solr_home
+
+mv /usr/local/apache-tomcat-8.0.48/solr_home/db /usr/local/apache-tomcat-8.0.48/solr_home/news
+
+
+
