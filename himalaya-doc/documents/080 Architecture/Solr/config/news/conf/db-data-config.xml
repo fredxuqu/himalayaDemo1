@@ -13,9 +13,11 @@
             <field column="ID" name="id" />
 			<field column="TITLE" name="title" />
 			<field column="CONTENT" name="content" />
-			<field column="AUTHER" name="auther" />			
-			<field column="CREATE_TIME" name="createTime" />
-			<field column="UPDATE_TIME" name="updateTime" />
+			<field column="AUTHER" name="auther" />	
+			<field column="TYPE" name="type" />		
+			<field column="PUBLISH_TIME" name="publish_time" />
+			<field column="CREATE_TIME" name="create_time" />
+			<field column="UPDATE_TIME" name="update_time" />
         </entity>
     </document>
 </dataConfig>

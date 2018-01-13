@@ -1,8 +1,5 @@
 package com.himalaya.httpclient;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -10,6 +7,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
 /**
 * @author: xuqu
 * @E-mail: fredxuqu@163.com
@@ -20,10 +18,10 @@ import org.apache.http.util.EntityUtils;
 public class HttpClientPostJSON {
 
 	//post请求方法
-    public  String sendPost(String url, String data) {
+    public static String sendPost(String url, String data) {
         String response = null;
 
-        try {
+        try { 
             CloseableHttpClient httpclient = null;
             CloseableHttpResponse httpresponse = null;
             try {
@@ -48,4 +46,123 @@ public class HttpClientPostJSON {
        }
        return response;
     }
+    
+    public static void main(String[] args) {
+    	
+    	// corp getlist
+    	String url = "http://search-yfb.pycredit.com/pycreditnlp/test";
+    	String response = HttpClientPostJSON.sendPost(url, null);
+    	System.out.println(response);
+		
+    	// corp getlist
+    	url = "http://search-yfb.pycredit.com/pycreditnlp/corp/getlist?";
+    	StringBuffer data = new StringBuffer("{");
+    	data.append("\"querystr\":\"鹏元\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// address getlist
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/address/getlist?";
+    	data = new StringBuffer("{");
+    	data.append("\"area\":\"深圳市福田区\",");
+    	data.append("\"querystr\":\"阳光高尔夫大厦\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// 企业名称校验
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/corp/verify?";
+    	data = new StringBuffer("{");
+    	data.append("\"querystr\":\"鹏元征信有限公司\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// 地址校验
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/address/verify?";
+    	data = new StringBuffer("{");
+    	data.append("\"selectedaddress\":\"深圳市福田区\",");
+    	data.append("\"detailaddress\":\"阳光高尔夫大厦\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// 企业名称比对
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/compare/get?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"1\",");
+    	data.append("\"item1\":\"华为技术\",");
+    	data.append("\"item2\":\"华为技术有限公司\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// 地址比对
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/compare/get?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"1\",");
+    	data.append("\"item1\":\"深圳市福田区阳光高尔夫大厦\",");
+    	data.append("\"item2\":\"广东省深圳市福田区阳光高尔夫大厦\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println(response);
+    	
+    	// 名称规范化
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/normalize/get?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"1\",");
+    	data.append("\"querystr\":\"华为技术有限公司\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println("corp normalize : " + response);
+    	
+    	// 地址规范化
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/normalize/get?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"2\",");
+    	data.append("\"querystr\":\"南山区腾讯科技大厦\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println("addr normalize : " + response);
+    	
+    	// 比对反馈
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/compare/feedback?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"2\",");
+    	data.append("\"item1\":\"深圳市福田区\",");
+    	data.append("\"item2\":\"深圳市福田区\",");
+    	data.append("\"result\":\"dfasfasdfds\",");
+    	data.append("\"feedbacks\":\"sdfasfdafsdfas\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println("compare feedback" + response);
+    	
+    	// host
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/verify/feedback?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"1\",");
+    	data.append("\"querystr\":\"鹏元征信有限公司\",");
+    	data.append("\"selectedaddress\":\"\",");
+    	data.append("\"detailaddress\":\"\",");
+    	data.append("\"result\":\"\",");
+    	data.append("\"feedbacks\":\"verify feedback\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println("verify feedback : " + response);
+    	
+    	
+    	// host
+    	url = "http://api-stg2.tianxiaxinyong.com/pycreditnlp/normalize/feedback?";
+    	data = new StringBuffer("{");
+    	data.append("\"mode\":\"1\",");
+    	data.append("\"querystr\":\"鹏元征信有限公司\",");
+    	data.append("\"reliability\":\"\",");
+    	data.append("\"docs\":\"\",");
+    	data.append("\"normalizeditem\":\"鹏元征信有限公司\",");
+    	data.append("\"feedbacks\":\"normalized feedback\"");
+    	data.append("}");
+    	response = HttpClientPostJSON.sendPost(url, data.toString());
+    	System.out.println("normalize feedback : " + response);
+	}
 }
