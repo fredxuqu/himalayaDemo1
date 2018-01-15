@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- <jee:jndi-lookupid = dataSource " jndi-name="/jdbc/himalayaDB" resource-ref="true" /> -->
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<!--数据库驱动类 -->
+		<property name="driverClassName" value="${oracle.jdbc.driverClassName}" />
+		<!--连接路径 -->
+		<property name="url" value="${oracle.jdbc.url}" />
+		<!--用户名 -->
+		<property name="username" value="${oracle.jdbc.username}" />
+		<!--密码 -->
+		<property name="password" value="${oracle.jdbc.password}" />
+		<!--配置一些过滤器类 -->
+		<!--配置具体过滤器类中的属性 -->
+		<property name="filters" value="config,stat" />
+		<!-- 配置密码加密和统计相关参数，统计慢sql的单位为毫秒，此处配置为3秒钟，超过3秒钟的sql为慢sql -->
+		<property name="connectionProperties"
+			value="config.decrypt=false;druid.stat.slowSqlMillis=3000;druid.stat.logSlowSql=true;druid.stat.mergeSql=true" />
+		<!--初始化最大的连接数量 -->
+		<property name="initialSize" value="20" />
+		<!--最小的空闲数量 -->
+		<property name="minIdle" value="20" />
+		<!--最大的活跃的数量 -->
+		<property name="maxActive" value="50" />
+		<!--最长的等待时间 -->
+		<property name="maxWait" value="60000" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，相当于C3P0的idleConnectionTestPeriod 参数，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="300000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<!-- 测试连接，单位为毫秒 -->
+		<property name="validationQueryTimeout" value="300000" />
+		<property name="validationQuery" value="SELECT sysdate from dual" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<!-- 如果用Oracle，则把poolPreparedStatements配置为true，MySQL可以配置为false。 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
+	</bean>
+</beans>

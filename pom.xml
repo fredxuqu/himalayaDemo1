@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>himalaya-corejava</module>
+		<module>himalaya-druid</module>
 		<module>himalaya-dao</module>
 		<module>himalaya-springmvc</module>
 		<module>himalaya-job</module>
@@ -50,6 +51,14 @@
 		<log.moduleName>solrService</log.moduleName>
 		<log.max.size>10MB</log.max.size>
 	</properties>
+	
+	<repositories>
+		<repository>
+			<id>local-file</id>
+			<url>file://${basedir}/lib/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>
@@ -138,21 +147,16 @@
 			<!-- 添加oracle jdbc driver -->
 			<!-- https://mvnrepository.com/artifact/com.oracle/ojdbc6 -->
 			<dependency>
-			    <groupId>com.oracle</groupId>
-			    <artifactId>ojdbc6</artifactId>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc6</artifactId>
 				<version>${oracle.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 	            <groupId>mysql</groupId>
 	            <artifactId>mysql-connector-java</artifactId>
 	            <version>${mysql.connector.version}</version>
 	        </dependency>
-			<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
-			<dependency>
-				<groupId>com.mchange</groupId>
-				<artifactId>c3p0</artifactId>
-				<version>${c3p0.version}</version>
-			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
 			<dependency>
 				<groupId>com.alibaba</groupId>

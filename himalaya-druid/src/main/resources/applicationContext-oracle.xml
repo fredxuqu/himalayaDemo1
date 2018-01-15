@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+					   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
+					   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<context:property-placeholder location="classpath:datasource.properties"/>
+	<!-- <context:property-placeholder location="classpath:datasource.properties,file:///D:/lib/service.properties"/> -->
+		
+	<import resource="classpath*:datasource-oracle.xml" />
+	
+	<bean id="sqlSessionFactory" name="sqlSessionFactoryName"
+          class="org.mybatis.spring.SqlSessionFactoryBean" 
+          p:dataSource-ref="dataSource" 
+          p:configLocation="classpath:myBatisConfig.xml" 
+          p:mapperLocations="classpath:com/himalaya/model/mybatis/*.xml"/>
+	
+    <bean class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryName"/>
+    	<property name="basePackage" value="com.himalaya.dao.mybatis"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource"/>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    	
+	<!--配置service的包扫描，自动注入Service -->
+	<context:annotation-config />
+	<context:component-scan base-package="com.himalaya" />
+	<!-- 
+	<bean id="propertyConfigure"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:datasource.properties</value> 
+				<value>file:///D:/config/tests.properties</value>
+			</list>
+		</property>
+		<property name="fileEncoding">
+			<value>UTF-8</value>
+		</property>
+	</bean> -->
+	
+	<!-- 使用spring自带的占位符替换功能 -->
+	<!-- bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean -->
+
+	<!-- 配置事务管理器 -->
+	<!-- 
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" />
+	-->
+
+	<!-- 通过AOP配置提供事务增强，让service包下所有Bean的所有方法拥有事务 -->
+	<!--
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethods"
+			expression=" execution(* com.himalaya.service..*.*(..))" />
+		<aop:advisor pointcut-ref="serviceMethods" advice-ref="txAdvice" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+ 	-->
+	
+</beans>
