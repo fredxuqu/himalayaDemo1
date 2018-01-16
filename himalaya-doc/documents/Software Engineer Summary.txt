@@ -24,3 +24,10 @@ Spring 3.x 企业应用开发实战 PDF完整高清扫描版	 	http://www.linuxi
 
 download thirdparty sourcecode 
 https://sourceforge.net/projects
+
+
+
+资源地址
+https://github.com 163mailbox 学习@1010
+
+https://gitee.com 163mailbox 学习@1010
