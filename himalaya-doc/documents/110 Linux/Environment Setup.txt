@@ -5,6 +5,20 @@ Serial Number:03-40-084141
 License Key: ABWGUE ZPPZ6X XHTN2S 1N7PER AB39ZJ PX3312 WS6BZF GHN2ET  
 Issue Date: 10-26-2002
 
+
+-----------------
+workstation 14 license
+CG54H-D8D0H-H8DHY-C6X7X-N2KG6
+
+ZC3WK-AFXEK-488JP-A7MQX-XL8YF
+
+AC5XK-0ZD4H-088HP-9NQZV-ZG2R4
+
+ZC5XK-A6E0M-080XQ-04ZZG-YF08D
+
+ZY5H0-D3Y8K-M89EZ-AYPEG-MYUA8
+-----------------
+
 Virtual Machine Setup
 1. Download Ubuntu 14.04.4 - ubuntu-14.04.4-desktop-amd64.iso
 	
