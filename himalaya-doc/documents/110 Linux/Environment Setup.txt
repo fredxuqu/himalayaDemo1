@@ -5,7 +5,6 @@ Serial Number:03-40-084141
 License Key: ABWGUE ZPPZ6X XHTN2S 1N7PER AB39ZJ PX3312 WS6BZF GHN2ET  
 Issue Date: 10-26-2002
 
-
 -----------------
 workstation 14 license
 CG54H-D8D0H-H8DHY-C6X7X-N2KG6
@@ -41,7 +40,7 @@ Virtual Machine Setup
 	    location : /users/anna/VirtualBox VMs
 	    VM name: fred-V01
 	    UserName : fred 
-	    pwd : sa
+	    pwd : Cheese@1
 	- install ssh 
 	sudo apt-get install openssh-server
 	
@@ -70,7 +69,7 @@ Virtual Machine Setup
 	dns-nameserver 211.162.77.77
 	
 	
-	3. sudo vim /etc/resolv.conf
+	3. sudo vi /etc/resolv.conf
 	nameserver 192.168.1.1
 	nameserver 211.162.66.66
 	nameserver 211.162.77.77
@@ -92,7 +91,7 @@ Virtual Machine Setup
 	set system variable
 	A. sudo vi ~/.bashrc   paste below config to the end of the file
 	#set oracle jdk environment
-	export JAVA_HOME=/usr/local/java/java
+	export JAVA_HOME=/usr/local/java
 	export JRE_HOME=$JAVA_HOME/jre
 	export CLASSPATH=.:$CLASSPATH:$JAVA_HOME/lib:$JRE_HOME/lib
 	export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
@@ -113,4 +112,14 @@ Virtual Machine Setup
 	lsb_release -a 
 	
 	
+6. iptables configuration  
+	sudo vi /etc/iptables.rules
+	
+	restart iptalbes
+	sudo  iptables-restore /etc/iptables.rules
+
+	check status
+	iptables -L -n
+
+
 	

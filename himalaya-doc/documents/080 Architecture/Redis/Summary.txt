@@ -1,3 +1,69 @@
+1. installation 
+	wget http://download.redis.io/releases/redis-3.2.11.tar.gz 
+	tar -zxvf redis-3.2.11.tar.gz
+	cd redis-3.2.11/src 
+	
+	specify directory to install redis
+	make PREFIX=/usr/local/workspace/redis && make install 
+	
+	/usr/local/bin/redis-server /usr/local/redis-3.2.11/redis.conf
+	
+2. conf master - slave mode
+	master conf:
+		port 6379
+		daemonize yes
+		bind 127.0.0.1 192.168.1.111 192.168.1.112 192.168.1.113
+		# 这个文件夹要改成自己的目录
+		dir "/Users/vobile_lzl/redis_master_s"
+		
+	slave config
+		port 6379
+		# 主服务器端口为6379
+		slaveof 127.0.0.1 6379
+		bind 127.0.0.1 192.168.1.111 192.168.1.112 192.168.1.113
+		dir "/Users/vobile_lzl/redis_slaver1_s"
+		
+	sentinel.conf
+		master :
+			port 26379
+			# 初次配置时的状态，这个sentinel会自动更新
+			sentinel monitor mymaster 127.0.0.1 6379 2
+			daemonize yes
+			logfile "./sentinel_log.log"
+	
+		slave
+			port 26378
+			# 初次配置时的状态，这个sentinel会自动更新
+			sentinel monitor mymaster 127.0.0.1 6379 2
+			daemonize yes
+			logfile "./sentinel_log.log"
+	
+	start:	
+	./redis-server redis.conf
+	./redis-server sentinel.conf --sentinel
+	
+SpringBoot & Redis Integration
+# Redis
+spring.redis.database=0 
+# Redis Server host
+spring.redis.host=localhost
+# Redis Port
+spring.redis.port=6379 
+# Redis password
+spring.redis.password=
+spring.redis.pool.max-active=8
+spring.redis.pool.max-wait=-1
+spring.redis.pool.max-idle=8
+spring.redis.pool.min-idle=0 
+spring.redis.timeout=0
+### \u4E3B\u4ECE\u914D\u7F6E
+# name of Redis server
+spring.redis.sentinel.master=mymaster
+# comma-separated list of host:port pairs
+spring.redis.sentinel.nodes=127.0.0.1:26379,127.0.0.1:26378,127.0.0.1:26377
+
+
+
 1. What's redis?
 2. Why we choose redis to store data
 3. How many data structures redis supported

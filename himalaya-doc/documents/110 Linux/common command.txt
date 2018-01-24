@@ -26,5 +26,6 @@ free
 find
 
 # check port
+netstat –anpt
 ps -aux | grep tomcat
 netstat –apn | grep 8080
