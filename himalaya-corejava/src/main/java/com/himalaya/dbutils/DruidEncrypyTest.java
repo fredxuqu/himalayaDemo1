@@ -11,7 +11,7 @@ public class DruidEncrypyTest {
 
 	public static void main(String[] args) throws Exception {
 		//密码明文
-		String password = "admin";
+		String password = "Admin#@1010Test";
 		
 		System.out.println("密码[ "+password+" ]的加密信息如下：\n");
 	
