@@ -1,5 +1,14 @@
 1. install
-
+	
+	linux:
+	https://mirrors.edge.kernel.org/pub/software/scm/git/
+	tar -xvf git-2.14.1.tar.gz 
+	./configure prefix=/usr/local/git
+	make prefix=/usr/local/git install
+	
+	vi /etc/profile
+	PATH=$PATH:/usr/local/git/bin
+	
 2. 
 	git add readme.txt
 	git commit -m "commit comments"

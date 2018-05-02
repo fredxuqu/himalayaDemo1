@@ -29,3 +29,15 @@ find
 netstat –anpt
 ps -aux | grep tomcat
 netstat –apn | grep 8080
+
+
+方法二：Linux下批量替换多个文件中的字符串的简单方法。用sed命令可以批量替换多个文件中的字符串。
+用sed命令可以批量替换多个文件中的 字符串。
+sed -i "s/原字符串/新字符串/g" `grep 原字符串 -rl 所在目录`
+例如：我要把mahuinan替换 为huinanma，执行命令：
+sed -i "s/mahuinan/huinanma/g" 'grep mahuinan -rl /www'
+这是目前linux最简单的批量替换字符串命令了！
+具体格式如下：
+sed -i "s/oldString/newString/g" `grep oldString -rl /path`
+实例代码：sed -i "s/大小多少/日月水火/g" `grep 大小多少 -rl /usr/aa`
+sed -i "s/大小多少/日月水火/g" `grep 大小多少 -rl ./`
