@@ -1,1 +1,537 @@
 https://github.com/elasticsearch-cn/elasticsearch-definitive-guide
+
+慕思网视频教程
+
+1. 版本 
+	1.x   2.x    5.x    6.x
+	
+2. 应用场景
+	海量数据分析引擎
+	站内搜索引擎
+	数据仓库（缓存）
+	
+	英国卫报： 实时分析公众对文章的回应
+	维基百科：
+	GitHub: 站内实时搜索，搜索13亿项目和1300亿行的代码
+	百度：实时的日志监控平台，日志分析系统
+	
+3. 安装
+	windows
+		下载 elasticsearch 、 nodejs、 elasticsearch-head
+		https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.0.zip
+		https://nodejs.org/en/download/
+		
+		1. 解压elasticsearch-6.3.0.zip 到 d:\workspaces
+		2. 安装nodejs
+			将nodejs的压缩文件解压到 d:\workspaces 然后在目录里面建两个文件夹 node-cache 和 node-global 
+			设置环境变量，在path里面增加  %NODE_HOME%;%NODE_HOME%\node-global
+			node -v 
+			npm -v 
+			查看 nodejs和npm是否安装完成
+			
+		3. 安装grunt
+			grunt是一个很方便的构建工具，可以进行打包压缩、测试、执行等等的工作，5.0里的head插件就是通过grunt启动的。因此需要安装grunt：	
+			注意：路径切到nodejs的安装目录中，E:\workspaces\node-v8.11.3-win-x64
+			执行命令：	npm install -g grunt-cli
+			-g代表全局安装。安装路径为C:\Users\yourname\AppData\Roaming\npm，并且自动加入PATH变量。安装完成后检查一下：
+			
+		4. git clone git://github.com/mobz/elasticsearch-head.git
+			修改head/Gruntfile.js
+				connect: {
+				    server: {
+				        options: {
+				            port: 9100,
+				            hostname: '*',    //增加这一行
+				            base: '.',
+				            keepalive: true
+				        }
+				    }
+				}
+			修改head/_site/app.js, 将host修改成ES服务器的IP地址
+			this.base_uri = this.config.base_uri || this.prefs.get("app-base_uri") || "http://10.192.48.164:9200";
+			
+			
+			运行head
+			修改elasticsearch的参数
+			修改一下es使用的参数。编辑config/elasticsearch.yml：
+			# 换个集群的名字，免得跟别人的集群混在一起
+			cluster.name: es-5.0-test
+			
+			# 换个节点名字
+			node.name: node-101
+			
+			# 修改一下ES的监听地址，这样别的机器也可以访问
+			network.host: 0.0.0.0
+			
+			# 默认的就好
+			http.port: 9200
+			
+			# 增加新的参数，这样head插件可以访问es
+			http.cors.enabled: true
+			http.cors.allow-origin: "*"
+			
+		5. 启动elasticsearch
+			bin/elasticsearch
+			
+		6. 然后在head源码目录中，执行npm install 下载的包
+		
+		7. 启动head
+			grunt server
+			
+			这样输入 localhost:9100 就可以启动服务了
+				
+		集群：
+			复制elasticsearch的zip包
+			修改master的配置文件elasticsearch.yml, 配置master如下
+				http.cors.enabled: true
+				http.cors.allow-origin: "*"
+				cluster.name: es-5.0-test
+				node.name: node-101
+				node.master: true
+				network.host: 0.0.0.0
+				http.port: 9200
+			
+			修改从节点的配置如下：
+						
+	单机：
+		wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.3.0.tar.gz
+		tar -xvf elasticsearch-6.3.0.tar.gz		
+		sh bin/elasticsearch
+		
+		
+4. ES的基础概念
+	集群和节点：一个集群由一个或多个节点组成
+			节点能够存储数据，参与索引和搜索 
+	索引：含有相同属性文档的集合
+	类型：索引可以定义一个或多个类型，文档必须属于一个类型
+	文档：文档是可以被索引的基本数据类型
+	
+	分片：每个索引都有多个分片，每个分片是一个lucene索引
+	备份：拷贝一份分片就完成了分片的备份
+	
+	分片的好处，分摊压力，提高性能
+	备份：备份分片可以提高ES可用性，提高搜索性能
+	
+	默认 5个分片  1 一个备份，分片只能在创建索引的时候确定，后期不能修改，但是备份数量可以在后期修改
+	
+5. ES基本用法
+	RESTFul API
+	API基本格式： http://<ip>:<port>/index/type/documentid
+	GET/PUT/POST/DELETE
+	
+	a. 创建索引
+	结构化
+		通过head页面创建
+	非结构化
+		通过head创建
+		{
+		  "finance": {
+		    "properties": {
+		      "title": {
+		        "type": "text"
+		      },
+		      "content": {
+		        "type": "text"
+		      },
+		      "author": {
+		        "type": "text"
+		      },
+		      "type": {
+		        "type": "integer"
+		      },
+		      "grade": {
+		        "type": "integer"
+		      },
+		      "publishTime": {
+		        "type": "date",
+		        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+		      },
+		      "createTime": {
+		        "type": "date",
+		        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+		      },
+		      "updateTime": {
+		        "type": "date",
+		        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+		      }
+		    }
+		  }
+		}
+	
+	安装使用postman
+	
+	数据插入：
+		{
+		  "id": "1",
+		  "title": "中国降低存款准备金",
+		  "content": "中国降低存款准备金",
+		  "author": "fred",
+		  "grade": 1,
+		  "publishTime": "2018-06-25",
+		  "createTime": "2018-06-25",
+		  "updateTime": "2018-06-25"
+		}
+		{
+		  "id": "1",
+		  "title": "中国美贸易战争",
+		  "content": "美国增加中国商品的进口关税",
+		  "author": "fred",
+		  "grade": 2,
+		  "publishTime": "2018-06-25",
+		  "createTime": "2018-06-25",
+		  "updateTime": "2018-06-25"
+		}
+	
+	修改数据：
+		http://localhost:9200/news/finance/1/_update
+		
+		{
+			"doc": {
+				"content": "中国将从7月五号降低商业银行存款准备金"
+			}
+		}		
+		
+		脚本修改
+		{
+			"script": {
+				"lang": "painless",
+				"inline": "ctx._source.grade += 1"
+			}
+		}
+		
+		{
+			"script": {
+				"lang": "painless",
+				"inline": "ctx._source.grade=params.grade",
+				"params":{
+					"grade":10
+				}
+			}
+		}		
+		
+	删除文档
+		http://localhost:9200/news/finance/1
+		
+	删除索引	
+		http://localhost:9200/news
+		
+	查询语法：
+		简单查询
+		GET http://localhost:9200/news/finance/1
+		
+		条件查询
+		POST http://localhost:9200/news/_search
+		查询所有：
+		{
+			"query":{
+				"match_all":{}
+			}
+		}
+		
+		查询所有，并且分页
+		{
+			"query":{
+				"match_all":{}
+			},
+			"from": 1,
+			"size": 1
+		}
+		
+		按照条件查询
+		{
+			"query":{
+				"match":{
+					"author":"fred"
+				}
+			}
+		}
+		
+		按照条件查询，并按照条件排序， 返回的score为null
+		{
+			"query":{
+				"match":{
+					"author":"fred"
+				}
+			},
+			"sort":[
+				{"grade":{"order":"desc"}}
+			]
+		}
+		
+		
+		聚合查询
+		聚合字段可以有多个，分别写在不同的term里面。
+		{
+			"aggs":{
+				"group-by-publish-time":{
+					"terms": {
+						"field": "publishTime"
+					}
+				}
+			}
+		}
+		
+		
+		对某个字段做一些列的聚合计算
+		{
+			"aggs":{
+				"grade_count":{
+					"stats": {
+						"field": "grade"
+					}
+				}
+			}
+		}
+		
+		{
+			"aggs":{
+				"grade_count":{
+					"min": {
+						"field": "grade"
+					}
+				}
+			}
+		}
+	
+	高级查询
+	子条件查询：叶子条件查询，特定字段查询所指特定值
+	Query Context：在查询的过程中，除了判断文档是否满足查询条件外，ES还会计算一个_score来标示匹配程度，旨在判断目标文档和查询条件匹配的有多好。
+		全文本查询：文本类型数据。
+			模糊匹配：分词匹配
+				{
+					"query":{
+						"match":{
+							"title":"存款准备金"
+						}
+					}
+				}
+				
+			习语匹配：连续匹配
+				{
+					"query":{
+						"match_phrase":{
+							"title":"存款准备金"
+						}
+					}
+				}
+			
+			模糊匹配：
+				{
+					"query":{
+						"multi_match":{
+							"query":"贸易准备金",
+							"fields": ["title","content"]
+						}
+					}
+				}
+				
+				
+			语法查询
+				{
+					"query":{
+						"query_string":{
+							"query":"中国 AND 准备金"
+						}
+					}
+				}
+				
+				{
+					"query":{
+						"query_string":{
+							"query":"中国 AND 准备金"
+						}
+					}
+				}
+				
+				{
+					"query":{
+						"query_string":{
+							"query":"(中国 AND 准备金) OR 关税"
+						}
+					}
+				}
+				
+				{
+					"query":{
+						"query_string":{
+							"query":"(中国 AND 准备金) OR 关税",
+							"fields": ["title","content"]
+						}
+					}
+				}
+			
+		字段级别查询
+			{
+				"query":{
+					"term":{
+						"grade":2
+					}
+				}
+			}
+			
+			{
+				"query":{
+					"range":{
+						"grade":{
+							"gte": 1,
+							"lte": 1
+						}
+					}
+				}
+			}
+			
+			// gte grate equal
+			
+			{
+				"query":{
+					"range":{
+						"grade":{
+							"gt": 1,
+							"lt": 1
+						}
+					}
+				}
+			}
+			
+			{
+				"query":{
+					"range":{
+						"publishTime":{
+							"gt": "2018-01-01",
+							"lt": "2018-10-01"
+						}
+					}
+				}
+			}
+
+	
+	过滤器：
+		{
+			"query": {
+				"bool":{
+					"filter":{
+						"term":{
+							"grade": 2
+						}
+					}
+				}
+			}
+		}
+		
+				
+	复合条件查询： 以一定的逻辑组合子条件查询
+	固定分数查询
+		{
+			"query": {
+				"constant_score":{
+					"filter":{
+						"title":"关税"
+						}
+					}
+				}
+			}
+		}
+		
+		{
+			"query": {
+				"constant_score":{
+					"filter":{
+						"match" : {
+							"title": "国美"
+						}
+					},
+					"boost": 2
+				}
+			}
+		}
+			
+	布尔查询
+		{
+			"query": {
+				"bool":{
+					"should":[
+						{
+							"match": {
+								"title":"关税"
+							}
+						},
+						{
+							"match": {
+								"content":"关税"
+							}
+						}
+					]
+				}
+			}
+		}
+		
+		
+		{
+			"query": {
+				"bool":{
+					"must":[
+						{
+							"match": {
+								"title":"关税"
+							}
+						},
+						{
+							"match": {
+								"content":"关税"
+							}
+						}
+					]
+				}
+			}
+		}
+		
+		{
+			"query": {
+				"bool":{
+					"must_not":[
+						{
+							"match": {
+								"title":"战争"
+							}
+						}
+					]
+				}
+			}
+		}
+		
+		
+		
+		布尔查询和filter的组合使用
+		{
+			"query": {
+				"bool":{
+					"should":[
+						{
+							"match": {
+								"title":"关税"
+							}
+						},
+						{
+							"match": {
+								"content":"关税"
+							}
+						}
+					],
+					"filter": [
+						{
+							"term":	{
+								"grade": 1
+							}
+						}
+					]
+				}
+			}
+		}
+		
+		
+		
+		
+		
+	
+	
+	

@@ -125,6 +125,9 @@
    <field name="title" type="text_ik" indexed="true" stored="true"/>
    <field name="content" type="text_ik" indexed="true" stored="true"/>
    <field name="author" type="text_general" indexed="true" stored="true"/>
+   <field name="type" type="text_general" indexed="true" stored="true"/>
+   <field name="grade" type="text_general" indexed="true" stored="true"/>
+   <field name="publishTime" type="date" indexed="true" stored="true"/>
    <field name="createTime" type="date" indexed="true" stored="true"/>
    <field name="updateTime" type="date" indexed="true" stored="true"/>
         

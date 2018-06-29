@@ -1,0 +1,54 @@
+1. AOP的概念
+	面向切面编程，将公共的一些处理逻辑统一放到一个切面中，使用代理的方式植入到业务逻辑中。
+	
+2. AOP术语
+	连接点： joinpoint
+	切点： pointcut
+	增强： advice
+	目标对象： target
+	引介： introduction
+	织入：weaving
+	代理：proxy
+	切面： aspect 由切点和增强组成
+	
+2. AOP实现技术
+	动态代理：	jdk 
+				InvocationHandler， Proxy
+				
+		   	cglib
+		   		MethodInterceptor，Enhancer
+		   		
+		   	jdk基于接口，cglib基于类采用的是底层字节码技术。
+	
+2. AOP的增强类型
+	前置增强：BeforeAdvice
+	后置增强：AfterRunningAdvice
+	环绕增强：MethodInterceptor
+	异常抛出增强：ThrowsAdvice
+	引介增强：IntroductionInterceptor
+	统一都使用ProxyFactoryBean来实现代理的动作，PRoxyFactoryBean包含的几个重要的属性：
+	proxyInterfaces
+	interceptorNames
+	target-ref
+	proxyTargetClass：用于ThrowsAdvice 和 IntroductionInterceptor
+	
+3. AOP切面
+	ClassFilter
+	MethodMatcher
+	
+	切面类型：一般切面、切点切面、引介切面
+	
+4. 切点的类型
+	静态方法切点
+	动态方法切点
+	注解切点
+	表达式切点
+	流程切点
+	符合切点
+	
+	
+
+
+
+
+

@@ -20,7 +20,7 @@ Spring-3.2.4 + Quartz-2.2.0集成实例 		http://www.linuxidc.com/Linux/2013-10/
 使用 Spring 进行单元测试 						http://www.linuxidc.com/Linux/2013-09/89913.htm
 运用Spring注解实现Netty服务器端UDP应用程序 		http://www.linuxidc.com/Linux/2013-09/89780.htm
 Spring 3.x 企业应用开发实战 PDF完整高清扫描版	 	http://www.linuxidc.com/Linux/2013-10/91357.htm
-
+学习@1010
 
 download thirdparty sourcecode 
 https://sourceforge.net/projects
@@ -30,6 +30,17 @@ https://sourceforge.net/projects
 https://github.com/spring-projects/spring-framework/releases/tag
 
 资源地址
-https://github.com 163mailbox 学习@1010
+https://github.com 163mailbox
+https://gitee.com 163mailbox
 
-https://gitee.com 163mailbox 学习@1010
+
+#linux 资源社区 , 要发帖，有金币才能下载，否则只能看
+163email
+ftp://ftp1.linuxidc.com linux_fredxuqu
+
+慕思
+https://www.imooc.com
+163email
+
+
+

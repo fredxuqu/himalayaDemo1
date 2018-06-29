@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>himalaya-corejava</module>
+		<module>himalaya-httpclient</module>
 		<module>himalaya-druid</module>
 		<module>himalaya-dao</module>
 		<module>himalaya-springmvc</module>

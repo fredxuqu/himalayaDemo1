@@ -229,10 +229,6 @@ commands
 	reload collection
 	http://127.0.0.1:8983/solr/admin/collections?action=RELOAD&name=tags
 	
-	
-
-	
-	
 1. download solr-6.3.0.tgz 
 2. tar -xvf  solr-5.5.4.tar solr-5.5.4/bin/install_solr_service.sh --strip-components=2
    tar -zxvf solr-5.5.4.tgz solr-5.5.4/bin/install_solr_service.sh --strip-compenents=2	
@@ -304,8 +300,6 @@ Solr6.3.0 Cloud 云方式的安装与配置
 3. upload solr config to zookeeper by below command
 	cd /usr/local/solr-5.5.4/server/scripts/cloud-scripts and execute
 	./zkcli.sh -cmd upconfig -confdir /usr/local/solr_home/tags/conf -confname tags -z server01:2181,server02:2181,server03:2181/solr
-
-	or save above command to a file "upsolrconf.sh"
 
 4. execute conf and link collection
 	cd /usr/local/solr-5.5.4/server/scripts/cloud-scripts and execute

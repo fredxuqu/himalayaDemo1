@@ -1,11 +1,11 @@
 <dataConfig>
-    <!-- dataSource driver="com.mysql.jdbc.Driver" 
+    <dataSource driver="com.mysql.jdbc.Driver" 
     			url="jdbc:mysql://127.0.0.1:3306/solr" 
     			user="test"
     			password="Admin#@1010Test"
-    			name="ds_news"/ -->
+    			name="ds_news"/>
     			
-    <dataSource jndiName="java:comp/env/jdbc/MysqlDataSource" type="JdbcDataSource" name="pysearchDS" /> 
+    <!-- <dataSource jndiName="java:comp/env/jdbc/MysqlDataSource" type="JdbcDataSource" name="pysearchDS" />  -->
     			
     <document>
         <entity name="item" 
@@ -13,8 +13,9 @@
             <field column="ID" name="id" />
 			<field column="TITLE" name="title" />
 			<field column="CONTENT" name="content" />
-			<field column="AUTHER" name="auther" />	
-			<field column="TYPE" name="type" />		
+			<field column="AUTHER" name="auther" />
+			<field column="TYPE" name="type" />
+			<field column="GRADE" name="grade" />
 			<field column="PUBLISH_TIME" name="publish_time" />
 			<field column="CREATE_TIME" name="create_time" />
 			<field column="UPDATE_TIME" name="update_time" />
