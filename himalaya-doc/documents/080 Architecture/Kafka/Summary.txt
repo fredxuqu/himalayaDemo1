@@ -1,0 +1,38 @@
+1. Introduce
+	
+2. 
+		
+3.  Installation
+	1. unzip kafka
+		wget http://mirrors.shuosc.org/apache/kafka/1.0.0/kafka_2.12-2.0.0.tgz
+		
+		https://kafka.apache.org/quickstart
+		
+	2. start zookeeper
+		bin/zookeeper-server-start.sh config/zookeeper.properties
+	3. start kafka broker
+		bin/kafka-server-start.sh [-doemon] config/server.properties
+	4. check
+		lsof -i:9092
+	5. create topic
+		bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic test1 --partitions 3 --replication-factor 1
+	6. create describe
+		bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test1		
+	7. start consumer
+		bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test1			
+	8. start producer
+		bin/kafka-console-producer.sh --broker-list localhost:2181 --topic test1
+		
+		send message：
+		Hello Kafka
+		
+	By Docker to install Kafka
+	1. install Docker
+	2. Create centos
+	3. Install JDK1.7+
+	4. Install Zookeeper
+	5. Start kafka
+	
+		
+		
+	

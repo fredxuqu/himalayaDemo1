@@ -1,0 +1,24 @@
+
+1. Installation
+	download from http://www.mongodb.org/downloads	
+	Create Database Directory：	D:\mongodb\data\db
+	Open command line, and navigate to : D:\Program Files\MongoDB\Server\3.4\bin
+	execute below command to start mongodb：
+	mongod --dbpath D:\mongodb\data\db
+	
+	install mongodb as a window service
+	mongod --dbpath D:\mongodb\data\db --install
+	or 
+	mongod --dbpath D:\mongodb\data\db --logpath d:\mongodb\log\MongoDB.log --install --serviceName MongoDB
+	
+	start mongodb
+	net start MongoDB
+	
+	connect to mongodb 
+	D:\mongodb\data\bin\mongo.exe
+	
+	open below in browser:
+		http://localhost:27017/
+	
+	
+	

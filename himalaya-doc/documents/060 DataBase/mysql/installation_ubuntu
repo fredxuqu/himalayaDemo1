@@ -1,0 +1,176 @@
+1. download
+	https://dev.mysql.com/downloads/mysql/
+	https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-server_5.7.24-1ubuntu14.04_amd64.deb-bundle.tar
+	
+	
+2. install
+	ubuntu：
+	sudo dpkg -i mysql-common_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg-preconfigure mysql-community-server_5.7.24-1ubuntu14.04_amd64.deb
+	#### need input root password in process
+	sudo dpkg -i libmysqlclient20_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg -i libmysqlclient-dev_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg -i libmysqld-dev_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg -i mysql-community-client_5.7.24-1ubuntu14.04_amd64.deb
+	#### execute "apt-get install libaio1" to install libaio1 before install below package.
+	sudo dpkg -i   mysql-client_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg -i   mysql-common_5.7.24-1ubuntu14.04_amd64.deb
+	sudo dpkg -i mysql-community-server_5.7.24-1ubuntu14.04_amd64.deb 
+	#### execute "apt-get install libmecab2" to install libmecab2 before install below package.
+	sudo dpkg -i mysql-server_5.7.24-1ubuntu14.04_amd64.deb 
+	
+	
+	RedHat：
+	1. 	download tar package
+		mysql-5.7.24-1.el6.x86_64.rpm-bundle.tar
+		
+	2.  unzip *.tar
+		tar -xvf mysql-5.7.24-1.el6.x86_64.rpm-bundle.tar
+		
+	3.	execute rpm to install package
+		rpm -ivh mysql-community-server-5.7.24-1.el6.x86_64.rpm
+		rpm -ivh mysql-community-client-5.7.24-1.el6.x86_64.rpm
+	
+	4. 	check
+		ps –aux | grep "mysql"
+		
+		mysql –uroot –p
+	
+	5.	update password	
+		mysqladmin -u root password 'new-password'
+		
+	6.	start,stop,restart mysql
+		service mysqld start
+		service mysqld stop
+		service mysqld restart
+		
+	7.	configure master
+		vi /etc/mysql/my.cnf, and add below config
+		server-id=1
+		binlog_do_db=your database name
+		binlog_ignore_db=mysql
+		relay-log=/var/lib/mysql/mysql-relay-bin
+		relay-log-index=/var/lib/mysql/mysql-relay-bin.index
+		log-error=/var/lib/mysql/mysql.err
+		master-info-file=/var/lib/mysql/mysql-master.info
+		relay-log-info-file=/var/lib/mysql/mysql-relay-log.info
+		log-bin=/var/lib/mysql/mysql-bin
+		sync_binlog=0
+		expire_logs_days=7
+		binlog_cache_size=1M
+		
+		login mysql and grant privileges
+		mysql -u root -p
+		mysql> GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY 'your_password';
+		mysql> FLUSH PRIVILEGES;
+		mysql> FLUSH TABLES WITH READ LOCK;
+		mysql> SHOW MASTER STATUS;
+		+------------------+----------+--------------+------------------+
+		| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |
+		+------------------+----------+--------------+------------------+
+		| mysql-bin.000003 | 11128001 | tecmint		 |                  |
+		+------------------+----------+--------------+------------------+
+		1 row in set (0.00 sec)
+		
+		dump all config and data
+		mysqldump -u root -p --all-databases --master-data > /root/dbdump.db
+		
+		mysql> UNLOCK TABLES;
+		mysql> quit;
+		
+	8.	configure slave
+		vi /etc/mysql/my.cnf, and add below config
+		server-id = 2
+		master-host=192.168.1.1(master server ip)
+		master-connect-retry=60
+		master-user=slave_user
+		master-password=yourpassword
+		replicate-do-db=your database name
+		relay-log = /var/lib/mysql/mysql-relay-bin
+		relay-log-index = /var/lib/mysql/mysql-relay-bin.index
+		log-error = /var/lib/mysql/mysql.err
+		master-info-file = /var/lib/mysql/mysql-master.info
+		relay-log-info-file = /var/lib/mysql/mysql-relay-log.info
+		log-bin = /var/lib/mysql/mysql-bin
+		
+		input dump file to slave
+		mysql -u root -p < /root/dbdump.db
+		
+		/etc/init.d/mysqld restart
+		
+		mysql -u root -p
+		mysql> slave stop;
+		mysql> CHANGE MASTER TO MASTER_HOST='192.168.1.1', MASTER_USER='slave_user', MASTER_PASSWORD='yourpassword', MASTER_LOG_FILE='mysql-bin.000003', MASTER_LOG_POS=11128001;
+		mysql> slave start;
+		mysql> show slave status\G
+				
+	9.	Verifying MySQL Replication on Master and Slave Server
+
+
+3. use mysql
+	sudo mysql --version
+	
+	sudo mysql -u root -p
+	
+	show databases;
+	
+	
+4. Master-Slave mode configuration
+	Master Configuration：
+		vi /etc/mysql/my.cnf
+		## add below lines：
+		server-id=1
+		log-bin=/var/lib/mysql/mysql-bin
+		log_bin_index=/var/lib/mysql/master-bin.index
+		binlog_do_db=my_data
+		binlog_ignore_db=mysql
+		sync_binlog=0
+		#config expire days
+		expire_logs_days=7
+		#binlog_cache_size set binlog cache size
+		binlog_cache_size=1M
+		
+		# restart mysql
+		/etc/init.d/mysql restart
+		
+		# relogin mysql and create a new user
+		sudo mysql -u root -p
+		mysql> create user 'repl'@'192.168.179.%' identified by '12345!@#$%';
+		mysql> GRANT REPLICATION SLAVE ON *.* TO 'repl'@'192.168.179.%';
+		
+		mysql> show master status;
+		+------------------+----------+--------------+------------------+-------------------+
+		| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
+		+------------------+----------+--------------+------------------+-------------------+
+		| mysql-bin.000001 |     1236 |              |                  |                   |
+		+------------------+----------+--------------+------------------+-------------------+
+		1 row in set (0.00 sec)
+	
+	Slave configure：
+		1.	change configuration 
+			vi /etc/mysql/my.cnf
+			server-id=2
+			read_only=1
+			
+			binlog_do_db=my_data
+			binlog_ignore_db=mysql
+			
+			#replicate-wild-do-table=solr.%
+			binlog_cache_size=1M
+
+		2.	restart mysql
+			/etc/init.d/mysql restart
+		
+		3.	connect master database
+			sudo mysql -u root -p
+			mysql> CHANGE MASTER TO MASTER_HOST='192.168.179.102', MASTER_USER='repl', MASTER_PASSWORD='12345!@#$%', MASTER_LOG_FILE='mysql-bin.000004', MASTER_LOG_POS=3085;
+	
+			mysql> start slave;
+			
+			mysql> show slave status \G;
+			
+			mysql> stop slave;
+	
+	
+	
+		

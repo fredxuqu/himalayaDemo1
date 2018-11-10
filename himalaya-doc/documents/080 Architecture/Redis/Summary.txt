@@ -6,7 +6,33 @@
 	specify directory to install redis
 	make PREFIX=/usr/local/workspace/redis && make install 
 	
+	start redis
 	/usr/local/bin/redis-server /usr/local/redis-3.2.11/redis.conf
+	
+	start redis when system started:
+		sudo cp utils/redis_init_script /etc/init.d/redisd
+		sudo vi redisd
+			EXEC=/usr/local/workspace/redis/bin/redis-server
+			CLIEXEC=/usr/local/workspace/redis/bin/redis-cli
+		sudo mkdir /etc/redis
+		sudo cp /usr/local/workspace/redis/bin/redis.conf /etc/redis/6379.conf
+		
+		sudo vi /etc/redis/6379.conf
+			#设置后台运行
+			daemonize yes  
+			#设置log文件路径
+			logfile /usr/local/workspace/redis/redis-server.log
+			#设置持久化文件存放路径
+			dir /usr/local/workspace/redis 
+		
+		sudo chmod +x /etc/init.d/redisd
+		cd /etc/init.d/
+		sudo update-rc.d redisd defaults	
+		
+		start or shutdown redis
+			sudo service redisd start
+			sudo service redisd stop
+			sudo service redisd restart
 	
 2. conf master - slave mode
 	master conf:
@@ -41,6 +67,11 @@
 	start:	
 	./redis-server redis.conf
 	./redis-server sentinel.conf --sentinel
+	
+	
+	nohup /usr/local/workspace/redis/bin/redis-server /usr/local/workspace/redis/bin/redis.conf &
+	nohup /usr/local/workspace/redis/bin/redis-sentinel /usr/local/workspace/redis/bin/sentinel.conf &
+	
 	
 SpringBoot & Redis Integration
 # Redis

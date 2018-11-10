@@ -1,0 +1,147 @@
+
+1.	Install Nodejs(Windows)
+	Download node.js from https://nodejs.org/en/download
+	
+	Linux上安装Node.js需要安装Python 2.6 或 2.7 ，不建议安装Python 3.0以上版本。
+	
+	双击下载后的安装包
+	
+2.  Install Node.js(Linux)
+	a. Linux
+	# wget https://nodejs.org/dist/v10.9.0/node-v10.9.0-linux-x64.tar.xz    // 下载
+	# tar xf  node-v10.9.0-linux-x64.tar.xz       // 解压
+	# cd node-v10.9.0-linux-x64/                  // 进入解压目录
+	# ./bin/node -v                               // 执行node命令 查看版本
+	v10.9.0
+	ln -s /usr/local/nodejs/bin/npm   /usr/local/bin/ 
+	ln -s /usr/local/nodejs/bin/node   /usr/local/bin/
+	
+	b. Ubuntu
+		Ubuntu 源码安装 Node.js
+		以下部分我们将介绍在 Ubuntu Linux 下使用源码安装 Node.js 。 其他的 Linux 系统，如 Centos 等类似如下安装步骤。
+		
+		在 Github 上获取 Node.js 源码：
+		
+		$ sudo git clone https://github.com/nodejs/node.git
+		Cloning into 'node'...
+		修改目录权限：
+		
+		$ sudo chmod -R 755 node
+		使用 ./configure 创建编译文件，并按照：
+		
+		$ cd node
+		$ sudo ./configure
+		$ sudo make
+		$ sudo make install
+		查看 node 版本：
+		
+		$ node --version
+		v0.10.25
+		Ubuntu apt-get命令安装
+		命令格式如下：
+		
+		sudo apt-get install nodejs
+		sudo apt-get install npm
+	
+	c.	CentOS 下源码安装 Node.js
+		1、下载源码，你需要在https://nodejs.org/en/download/下载最新的Nodejs版本，本文以v0.10.24为例:
+		
+		cd /usr/local/src/
+		wget http://nodejs.org/dist/v0.10.24/node-v0.10.24.tar.gz
+		2、解压源码
+		
+		tar zxvf node-v0.10.24.tar.gz
+		3、 编译安装
+		
+		cd node-v0.10.24
+		./configure --prefix=/usr/local/node/0.10.24
+		make
+		make install
+		4、 配置NODE_HOME，进入profile编辑环境变量
+		
+		vim /etc/profile
+		设置nodejs环境变量，在 export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL 一行的上面添加如下内容:
+		
+		#set for nodejs
+		export NODE_HOME=/usr/local/node/0.10.24
+		export PATH=$NODE_HOME/bin:$PATH
+		:wq保存并退出，编译/etc/profile 使配置生效
+		
+		source /etc/profile
+		验证是否安装配置成功
+		
+		node -v
+		输出 v0.10.24 表示配置成功
+		
+		npm模块安装路径
+		
+		/usr/local/node/0.10.24/lib/node_modules/
+		注：Nodejs 官网提供了编译好的Linux二进制包，你也可以下载下来直接应用。
+	
+	d.	Mac OS 上安装
+		你可以通过以下两种方式在 Mac OS 上来安装 node：
+		1、在官方下载网站下载 pkg 安装包，直接点击安装即可。
+		2、使用 brew 命令来安装：
+		
+		brew install node
+		在 Cloud Studio 中运行 node.js 程序
+		Cloud Studio 已经为我提供了内置的 Node.js 开发环境，我们不仅可以通过切换运行环境来编写 Node.js 代码，也可以通过 访问链接 功能来实时查看代码的运行效果，下面我通过一个例子来展示：
+		
+		step1：访问Cloud Studio(https://studio.dev.tencent.com/)，注册/登录账户。
+		step2：在右侧的运行环境菜单选择："Node.js" 运行环境
+		step3：在左侧代码目录中新建Node.js代码目录编写你的 Node.js 代码
+		step4：进入 Node.js 代码目录运行 node hello.js 我们在代码中引入了 http 模块，并且通过http.createServer()方法创建了一个 http 服务器，通过listen() 方法绑定了 8888 端口
+		step5：点击最右侧的【访问链接】选项卡，在访问链接面板中填写端口号为：8888，点击创建链接，即可点击生成的链接访问我们的 Node.js 项目
+		/*代码示例*/
+		
+		var http = require('http');
+		
+		http.createServer(function (request, response) {
+		
+		    // 发送 HTTP 头部 
+		    // HTTP 状态值: 200 : OK
+		    // 内容类型: text/plain
+		    response.writeHead(200, {'Content-Type': 'text/plain'});
+		
+		    // 发送响应数据 "Hello World"
+		    response.end("Hello, Universe! I'm running on Cloud Studio!\n");
+		}).listen(8888);
+		
+		// 终端打印如下信息
+		console.log('Server running at http://127.0.0.1:8888/');
+		Tips: 从终端中输入命令可以看出 Cloud Studio 为我们集成了 Ubuntu16.04.1 + node8.10.0 的开发环境：
+		
+		
+		
+		
+2.	如何开发VUE
+	首先，列出来我们需要的东西： 
+	node.js环境（npm包管理器）
+	vue-cli 脚手架构建工具
+	npm npm的淘宝镜像
+	
+	github 
+	https://github.com/PanJiaChen/vue-element-admin
+	
+	创建一个新项目
+	全局安装vue-cli
+	npm install --global vue-cli
+	
+	创建一个基于webpack模板的新项目
+	vue init webpack my-project
+	
+	npm install
+	
+	npm run dev
+	
+	
+	首先，我们确保安装了最新的Vue CLI。打开Terminal，输入：
+	npm install -g @vue/cli	
+	# ORyarn global add @vue/cli	
+	
+	你可以使用-V来查看一些刚刚安装的版本：	
+	vue -V# 应该会输出下面的结果3.0.0-rc.3	
+	为了初始化你的Vue UI，在一个干净的目录下输入：	
+	vue ui
+	
+	
