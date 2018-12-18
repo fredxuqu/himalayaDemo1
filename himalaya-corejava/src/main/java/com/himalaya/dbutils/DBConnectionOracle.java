@@ -13,19 +13,19 @@ import java.sql.Statement;
 * 2018年2月8日 下午2:33:19
 * Description
 */
-public class DBConnection {
+public class DBConnectionOracle {
 
 	public static void main(String[] args) {
 		//声明Connection对象
 		Connection con;
 		//驱动程序名
-		String driver = "com.mysql.jdbc.Driver";
+		String driver = "oracle.jdbc.driver.OracleDriver";
 		//URL指向要访问的数据库名mydata
-		String url = "jdbc:mysql://localhost:3306/solr?useSSL=false";
+		String url = "jdbc:oracle:thin:@127.0.0.1:1521:fred";
 		//MySQL配置时的用户名
-		String user = "test";
+		String user = "sys";
 		//MySQL配置时的密码
-		String password = "Admin#1010";
+		String password = "Study1010";
 		//遍历查询结果集
 		try {
 			//加载驱动程序
@@ -69,8 +69,6 @@ public class DBConnection {
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		}finally{
-			System.out.println("数据库数据成功获取！！");
 		}
 	}
 }

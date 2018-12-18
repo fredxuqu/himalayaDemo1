@@ -1,0 +1,52 @@
+install oracle on ubuntu
+1. download package from below site
+	http://www.oracle.com/technetwork/database/enterprise-edition/downloads/index.html
+	
+2. exec
+	sudo apt-get update
+	
+	sudo apt-get install alien autoconf automake autotools-dev binutils doxygen \
+	elfutils expat gawk gcc gcc-multilib g++-multilib libstdc++6:i386 ksh less libtiff4 \
+	libtiff4-dev lib32z1 libaio1 libaio-dev libc6-dev libc6-dev-i386 libc6-i386 \
+	libelf-dev libltdl-dev libmotif4 libodbcinstq4-1 libodbcinstq4-1:i386 \
+	libpthread-stubs0 libpth-dev libstdc++5 lsb-cxx make \
+	pdksh openssh-server rlwrap rpm sysstat unixodbc unixodbc-dev x11-utils \
+	zlibc libglapi-mesa:i386 libglu1-mesa:i386 libqt4-opengl:i386 \
+	libpthread-workqueue0 libpthread-workqueue-dev libzthread-2.3-2 libzthread-dev \
+	libpthread-stubs0-dev
+	
+3. 其中包libtiff4, libtiff4-dev and libpthread-stubs0可能源中没有，可用以下方法安装
+	$sudo su 
+	$echo 'deb http://cz.archive.ubuntu.com/ubuntu precise main universe' >> /etc/apt/sources.list.d/extra.list  //添加源
+	sudo apt-get update
+	sudo apt-get install libtiff4 libtiff4-dev
+	mv /etc/apt/sources.list.d/extra.list /etc/apt/sources.list.d/extra.list.backup //移除源
+	apt-get update
+	
+4.	config system
+	//Linking Binaries
+	ln -s /usr/bin/awk /bin/awk
+	ln -s /usr/bin/rpm /bin/rpm
+	ln -s /usr/bin/basename /bin/basename
+	//Linking Libraries
+	ln -s /usr/lib/x86_64-linux-gnu /usr/lib64
+	cd /lib64
+	ln -s /lib/x86_64-linux-gnu/libgcc_s.so.1 .
+	
+5.	set user group	
+	sudo groupadd -g 502 oinstall
+	sudo groupadd -g 503 dba
+	sudo groupadd -g 504 oper
+	sudo groupadd -g 505 asmadmin
+	sudo useradd -u 502 -g oinstall -G dba,asmadmin,oper -s /bin/bash -m oracle
+	sudo passwd oracle //设置你自己的密码
+	//创建需要安装oracle的文件夹
+	sudo mkdir -p /opt/oracle/app/oracle/product/11.2.0/       		//创建文件夹
+	sudo chown -R oracle:oinstall /opt/oracle                         	//给文件夹更改用户组
+	sudo chmod -R 775 /opt/oracle                                     //设置文件夹权限
+	//----解压下载的压缩包至指定文件夹并设置权限
+	sudo cd /home/[myUser]/Downloads //你压缩包所在路径
+	sudo unzip linux_11gR2_database_1of2.zip
+	sudo unzip linux_11gR2_database_2of2.zip
+	sudo chown -R oracle:oinstall database
+	sudo mv database /tmp

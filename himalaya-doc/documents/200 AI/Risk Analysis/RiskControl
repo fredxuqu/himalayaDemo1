@@ -460,6 +460,9 @@
 			用于两个评分卡模型，在同样一批样本上模型好坏，可以采用Divergence区别
 		3. 好、坏人群浓度的差异
 			Gini
+			
+	KS计算
+		把样本得到的分数，从低到高排序，
 				
 	准确度：
 		混淆矩阵
@@ -467,6 +470,8 @@
 						坏					好
 			预测 	坏	True Positive(TP)	False Positive(FP)
 				好	False Negative(FN)	False Negative（TN）
+				
+			
 		
 			真正类率：TPR (true positive rate)
 				代表分类器预测的正类中，实际正实例所占所有正实例的比例（Sensitivity）
@@ -479,11 +484,85 @@
 			真负类率： TNR (true negative rate)
 				代表分类器预测的负类中，实际负实例所占所有负实例的比例（Specificity）
 				TNR = 1 - FPR
-					
-						
-		ROC曲线	
+										
+		ROC曲线
+		1、roc曲线：接收者操作特征(receiveroperating characteristic),roc曲线上每个点反映着对同一信号刺激的感受性。			
+			横轴：负正类率(false postive rate FPR)特异度，划分实例中所有负例占所有负例的比例；(1-Specificity)			
+			纵轴：真正类率(true postive rate TPR)灵敏度，Sensitivity(正类覆盖率)			
+		2针对一个二分类问题，将实例分成正类(postive)或者负类(negative)。但是实际中分类时，会出现四种情况.			
+			(1)若一个实例是正类，并且被预测为正类，	即为真正类(True Postive TP)			
+			(2)若一个实例是正类，但是被预测成为负类，即为假负类(False Negative FN)			
+			(3)若一个实例是负类，但是被预测成为正类，即为假正类(False Postive FP)		
+			(4)若一个实例是负类，但是被预测成为负类，即为真负类(True Negative TN)			
 		
+		TP:正确的肯定数目			
+		FN:漏报，没有找到正确匹配的数目			
+		FP:误报，没有的匹配不正确			
+		TN:正确拒绝的非匹配数目
+		
+		列联表如下，1代表正类，0代表负类：	
+					预测	
+					1					0					合计
+		实际	1	True Positive(TP)	False Negative(FN)		Actual Positive (TP + FN)
+			0	False Positive(FP)	True Negative(TN) 		Actual Negative (FP + TN)
+		合计		Predicted Positive	Predicted False
+				（预测的正 TP+FP）		（预测的负 FN + TN）			TP + FN + FP + TN
+				
+		由上表可得出横，纵轴的计算公式：
+		(1)真正类率(True Positive Rate)TPR: TP/(TP+FN)		代表分类器预测的正类中实际正实例占所有正实例的比例。				Sensitivity
+		(2)负正类率(False Positive Rate)FPR: FP/(FP+TN)	代表分类器预测的正类中实际负实例占所有负实例的比例。				1-Specificity
+		(3)真负类率(True Negative Rate)TNR: TN/(FP+TN)		代表分类器预测的负类中实际负实例占所有负实例的比例，TNR=1-FPR。	Specificity		
+		
+		如何画ROC曲线？
+		对于一个特定的评分卡（模型）和测试数据集，显然只能得到一个分类结果，即一组FPR和TPR结果，而要得到一个曲线，我们实际
+		上需要一系列的FPR和TPR值，如何得到呢？
+		可以利用评分卡（模型）的一个重要功能“概率输出”，即表示模型认为某个样本具有多大的概率属于正样本（或负样本）。我们可以将
+		模型输出的score做为阈值，当测试样本属于正样本的概率大于或等于这个threshold时，我们认为它为正样本，否则为负样本。
+		以下例子：
+			instance 	Class 	Score	
+			1			p		0.90
+			2			p		0.80
+			3			n		0.70
+			4			p		0.60
+			5			p		0.55
+			6			p		0.54
+			7			n		0.53
+			8			n		0.52
+			9			p		0.51
+			10			n		0.45
+			11			p		0.40
+			12			n		0.39
+			13			p		0.38
+			14			n		0.37
+			15			n		0.36
+			16			n		0.35
+			17			p		0.34
+			18			n		0.33
+			19			p		0.30
+			20			n		0.10
 			
+			
+			统计步骤
+			1.	首先按照反馈的真实样本数据从数据库中查出真实数据所对应的预测值
+			2.	将数据按照预测值的score进行降序排序
+			3. 	统计出所有的实际正实例和负实例的数量
+			3.	从第一个样本开始，使用score作为阈值
+			4. 	统计出以score为阈值的所有大于score的真正正实例的数量，以及所有真正负实例的数量即统计出 TP 和 FP
+			5. 	分别计算出 TPR 和 FPR
+				第一条的score=0.9，所以阈值为0.9，统计出大于或者等于0.9的TP,FN,FP,TN
+				TP: 1	FN:	9	FP:	0	TN: 10	FPR=FP/(FP+TN)=0	TPR=TP/(TP+FN)=1/10=0.1
+				
+				第十条的score=0.45，所以阈值为0.45，统计出大于或等于0.45的TP,FN,FP,TN
+				TP: 6	FN: 4	FP:	4	TN:	 6	FPR=FP/(FP+TN)=0.4	TPR=TP/(TP+FN)=0.6	
+				
+				统计出预测的正实例中，真正的正实例所占所有真正正实例的比例
+				统计出预测的正实例中，真正的负实例所占所有负实例的比例
+							
+		在实际的统计中，如果样本数量太大，我们可以按照跨度来进行统计，即按照一定的跨度来挑选阈值(threshold)
+		
+	AUC计算
+		
+		
 第六讲：行为评分卡模型
 	基本概念
 		根据贷款人放贷后的表现行为，预测未来预期/违约风险概率的模型
