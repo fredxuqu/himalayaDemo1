@@ -13,7 +13,7 @@
 		<module>himalaya-httpclient</module>
 		<module>himalaya-druid</module>
 		<module>himalaya-dao</module>
-		<module>himalaya-springmvc</module>
+		<!-- <module>himalaya-springmvc</module> -->
 		<module>himalaya-job</module>
 		<module>himalaya-rocketmq</module>
 		<module>himalaya-zookeeper</module>
@@ -96,7 +96,15 @@
 				<artifactId>commons-lang3</artifactId>
 				<version>3.4</version>
 			</dependency>
-
+			
+			<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+			<dependency>
+			    <groupId>org.projectlombok</groupId>
+			    <artifactId>lombok</artifactId>
+			    <version>1.16.6</version>
+			    <scope>provided</scope>
+			</dependency>
+			
 			<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 			<dependency>
 				<groupId>javax.servlet</groupId>
