@@ -1,0 +1,6 @@
+1. 系统登录后，如何加入cookie信息
+	首先在页面利用用户名和密码登录，从浏览器获取到cookie的信息，将cookie信息加入到postman请求的Header中
+	key		 value
+	Cookie   "SID=DFAJFLAKDSFLKASJ;LF"
+	
+2. 
