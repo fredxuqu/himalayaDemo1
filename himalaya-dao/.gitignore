@@ -1,6 +1,9 @@
 .classpath
 .project
-/target/
-/logs/
 /.settings/
+/target/
 
+**/*.iml
+
+*.log
+/logs/

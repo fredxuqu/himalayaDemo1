@@ -13,7 +13,7 @@
 		<module>himalaya-httpclient</module>
 		<module>himalaya-druid</module>
 		<module>himalaya-dao</module>
-		<!-- <module>himalaya-springmvc</module> -->
+		<module>himalaya-java8</module>
 		<module>himalaya-job</module>
 		<module>himalaya-rocketmq</module>
 		<module>himalaya-zookeeper</module>
