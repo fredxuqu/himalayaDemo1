@@ -61,6 +61,11 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
 		<!-- Nature Language Processor 
 		<dependency>
             <groupId>com.hankcs</groupId>

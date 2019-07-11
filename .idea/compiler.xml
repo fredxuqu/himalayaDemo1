@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="himalayaAssembly" />
+        <module name="himalayaCoreJava" />
+        <module name="himalayaDAO" />
+        <module name="himalayaDruid" />
+        <module name="himalayaHttpCLient" />
+        <module name="himalayaJava8" />
+        <module name="himalayaJob" />
+        <module name="himalayaRocketMQ" />
+        <module name="himalayaSearch" />
+        <module name="himalayaSolrPlugin" />
+        <module name="himalayaWebService" />
+        <module name="himalayaZookeeper" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="himalayaAssembly" target="1.5" />
+      <module name="himalayaCoreJava" target="1.8" />
+      <module name="himalayaDAO" target="1.8" />
+      <module name="himalayaDemo" target="1.5" />
+      <module name="himalayaDruid" target="1.8" />
+      <module name="himalayaHttpCLient" target="1.5" />
+      <module name="himalayaJava8" target="1.8" />
+      <module name="himalayaJob" target="1.8" />
+      <module name="himalayaRocketMQ" target="1.8" />
+      <module name="himalayaSearch" target="1.7" />
+      <module name="himalayaSolrPlugin" target="1.7" />
+      <module name="himalayaWebService" target="1.8" />
+      <module name="himalayaZookeeper" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
