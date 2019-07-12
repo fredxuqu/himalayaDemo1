@@ -5,7 +5,7 @@
 
 *.iml
 
+/.idea/
+
 *.log
 /logs/
-
-

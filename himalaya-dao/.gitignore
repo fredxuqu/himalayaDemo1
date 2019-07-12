@@ -3,7 +3,9 @@
 /.settings/
 /target/
 
-**/*.iml
+*.iml
+
+/.idea/
 
 *.log
 /logs/
