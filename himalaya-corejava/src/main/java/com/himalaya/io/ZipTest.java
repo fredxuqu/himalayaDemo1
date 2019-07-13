@@ -1,6 +1,7 @@
 package com.himalaya.io;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -79,7 +80,8 @@ public class ZipTest {
         }
     }
     public static void main(String[] args){
-        File file = new File("C:\\Users\\xuqu\\git\\himalayaDemo\\himalaya-corejava\\src\\main\\resources\\result.zip");
+        URL url = Thread.currentThread().getContextClassLoader().getResource("");
+        File file = new File(url.getPath());
         readZip(file);
         readZipFile(file);
         readZipFileBytes(file);
