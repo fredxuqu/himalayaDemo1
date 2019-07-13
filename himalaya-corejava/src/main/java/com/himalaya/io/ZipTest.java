@@ -80,7 +80,7 @@ public class ZipTest {
         }
     }
     public static void main(String[] args){
-        URL url = Thread.currentThread().getContextClassLoader().getResource("");
+        URL url = Thread.currentThread().getContextClassLoader().getResource("result.zip");
         File file = new File(url.getPath());
         readZip(file);
         readZipFile(file);
