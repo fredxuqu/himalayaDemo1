@@ -34,7 +34,7 @@
 		<druid.version>1.0.26</druid.version>		
 		<oracle.version>11.2.0.3</oracle.version>
 		<mysql.connector.version>5.1.40</mysql.connector.version>
-		<jackson.version>2.5.5</jackson.version>
+		<jackson.version>2.9.10.4</jackson.version>
 		<rocketmq.client.version>3.2.6</rocketmq.client.version>
 		<cxfapi.version>2.5.0</cxfapi.version>
 		<servlet.version>2.5</servlet.version>
