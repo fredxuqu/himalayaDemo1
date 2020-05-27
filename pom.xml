@@ -42,6 +42,7 @@
 		<hibernate.version>5.0.4.Final</hibernate.version>
 		<mybatis.version>3.4.2</mybatis.version>
 		<ognl.version>3.1.6</ognl.version>
+		<kafka.client.version>2.0.1</kafka.client.version>
 		
 		<dubbo.version>2.5.4-SNAPSHOT</dubbo.version>
 
@@ -389,6 +390,13 @@
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-ooxml</artifactId>
 				<version>3.15</version>
+			</dependency>
+
+			<!-- kafka client -->
+			<dependency>
+				<groupId>org.apache.kafka</groupId>
+				<artifactId>kafka-clients</artifactId>
+				<version>${kafka.client.version}</version>
 			</dependency>
 
 		</dependencies>
