@@ -40,7 +40,7 @@
 		<servlet.version>2.5</servlet.version>
 		<spring.boot.version>1.4.6.RELEASE</spring.boot.version>
 		<hibernate.version>5.0.4.Final</hibernate.version>
-		<mybatis.version>3.4.2</mybatis.version>
+		<mybatis.version>3.5.6</mybatis.version>
 		<ognl.version>3.1.6</ognl.version>
 		<kafka.client.version>2.0.1</kafka.client.version>
 		
